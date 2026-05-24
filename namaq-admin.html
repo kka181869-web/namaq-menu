@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>نمق — لوحة الإدارة المركزية</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --forest: #505F50; --forest-dark: #3a4a3a; --forest-light: #6b7d6b;
+  --forest-pale: #d4ddd4; --beige: #f0e1d2; --beige-dark: #e6d0bc;
+  --cream: #faf5ef; --warm-white: #fdf9f5; --ink: #2c2416; --ink-light: #5a4a35;
+  --gold: #b8965a; --gold-light: #d4b07a; --red: #e53935;
+  --shadow: rgba(80,95,80,0.12); --r: 14px;
+  --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  color-scheme: light;
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family:'Noto Naskh Arabic',serif;
+  background:#f0e1d2 !important;
+  color:#2c2416 !important;
+  min-height:100vh;
+}
+
+/* ── LOGIN SCREEN ── */
+.login-screen {
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background: linear-gradient(135deg, var(--forest-dark) 0%, var(--forest) 100%);
+}
+
+.login-card {
+  background:var(--warm-white);
+  border-radius:24px;
+  padding:36px 28px;
+  width:100%;
+  max-width:380px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.25);
+}
+
+.login-logo {
+  text-align:center;
+  margin-bottom:24px;
+}
+
+.login-brand {
+  font-family:'Cormorant Garamond',serif;
+  font-size:42px;
+  font-weight:600;
+  color:var(--forest-dark);
+  letter-spacing:4px;
+  display:block;
+}
+
+.login-sub {
+  font-family:'Lora',serif;
+  font-size:12px;
+  font-style:italic;
+  color:var(--gold);
+  letter-spacing:2px;
+  margin-top:4px;
+}
+
+.login-title {
+  font-size:16px;
+  font-weight:700;
+  color:var(--forest-dark);
+  margin-bottom:20px;
+  text-align:center;
+}
+
+.field-group { margin-bottom:14px; }
+
+.field-label {
+  display:block;
+  font-size:12px;
+  font-weight:600;
+  color:var(--ink-light);
+  margin-bottom:6px;
+  opacity:.8;
+}
+
+.field-input {
+  width:100%;
+  padding:12px 16px;
+  border:1.5px solid var(--beige-dark);
+  border-radius:10px;
+  background:var(--beige);
+  font-family:'Noto Naskh Arabic',serif;
+  font-size:14px;
+  color:var(--ink);
+  outline:none;
+  transition:var(--transition);
+}
+
+.field-input:focus { border-color:var(--forest-light); background:#fff; box-shadow:0 0 0 3px rgba(80,95,80,0.08); }
+.field-input[type="password"] { direction:ltr; letter-spacing:2px; }
+
+.login-btn {
+  width:100%;
+  padding:14px;
+  background:linear-gradient(135deg,var(--forest) 0%,var(--forest-dark) 100%);
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  font-family:'Noto Naskh Arabic',serif;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 4px 16px rgba(80,95,80,0.3);
+  transition:var(--transition);
+  margin-top:4px;
+}
+
+.login-btn:hover { transform:translateY(-1px); }
+.login-btn:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+
+.login-error {
+  display:none;
+  background:rgba(229,57,53,0.08);
+  border:1px solid rgba(229,57,53,0.2);
+  border-radius:8px;
+  padding:10px 14px;
+  font-size:13px;
+  color:var(--red);
+  text-align:center;
+  margin-top:12px;
+}
+
+/* ── DASHBOARD ── */
+.dashboard { display:none; }
+.dashboard.visible { display:block; }
+
+/* Top bar */
+.top-bar {
+  background:linear-gradient(135deg,var(--forest-dark) 0%,var(--forest) 100%);
+  padding:16px 24px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:100;
+  box-shadow:0 2px 16px rgba(58,74,58,0.3);
+}
+
+.top-bar-brand { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:600; color:#fff; letter-spacing:3px; }
+.top-bar-role { font-family:'Lora',serif; font-size:11px; font-style:italic; color:var(--gold-light); letter-spacing:1px; margin-top:2px; }
+
+.top-logout-btn {
+  padding:8px 16px;
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:20px;
+  color:#fff;
+  font-family:'Noto Naskh Arabic',serif;
+  font-size:12px;
+  cursor:pointer;
+  transition:var(--transition);
+}
+
+.top-logout-btn:hover { background:rgba(255,255,255,0.2); }
+
+/* Stats row */
+.stats-row {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:12px;
+  padding:20px 20px 0;
+}
+
+.stat-card {
+  background:var(--warm-white);
+  border-radius:16px;
+  padding:16px;
+  text-align:center;
+  box-shadow:0 2px 8px var(--shadow);
+  border:1px solid rgba(255,255,255,0.8);
+}
+
+.stat-num { font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:600; color:var(--forest); line-height:1; }
+.stat-label { font-size:12px; color:var(--ink-light); margin-top:4px; font-weight:600; }
+.stat-card.alert .stat-num { color:var(--red); }
+
+/* Tabs */
+.tabs {
+  display:flex;
+  gap:4px;
+  padding:16px 20px 0;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+
+.tab-btn {
+  padding:9px 18px;
+  border:none;
+  border-radius:20px;
+  font-family:'Noto Naskh Arabic',serif;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  white-space:nowrap;
+  background:var(--warm-white);
+  color:var(--ink-light);
+  box-shadow:0 1px 4px var(--shadow);
+  transition:var(--transition);
+}
+
+.tab-btn.active {
+  background:linear-gradient(135deg,var(--forest) 0%,var(--forest-dark) 100%);
+  color:#fff;
+  box-shadow:0 3px 10px rgba(80,95,80,0.3);
+}
+
+/* Tab content */
+.tab-content { display:none; padding:16px 20px; }
+.tab-content.active { display:block; }
+
+/* Section title */
+.section-title {
+  font-size:16px;
+  font-weight:700;
+  color:var(--forest-dark);
+  margin-bottom:14px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* Panel */
+.panel {
+  background:var(--warm-white);
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.8);
+  box-shadow:0 2px 10px var(--shadow);
+  overflow:hidden;
+  margin-bottom:16px;
+}
+
+.panel-head {
+  padding:14px 18px;
+  background:linear-gradient(90deg,rgba(80,95,80,0.05),transparent);
+  border-bottom:1px solid var(--beige-dark);
+  font-size:14px;
+  font-weight:700;
+  color:var(--forest-dark);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.panel-body { padding:16px 18px; }
+
+/* Form grid */
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+@media(max-width:500px) { .form-grid { grid-template-columns:1fr; } }
+
+/* Buttons */
+.btn-primary {
+  padding:11px 20px;
+  background:linear-gradient(135deg,var(--forest) 0%,var(--forest-dark) 100%);
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  font-family:'Noto Naskh Arabic',serif;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+  transition:var(--transition);
+  box-shadow:0 3px 10px rgba(80,95,80,0.25);
+}
+
+.btn-primary:hover { transform:translateY(-1px); }
+
+.btn-danger {
+  padding:7px 12px;
+  background:transparent;
+  border:1.5px solid rgba(229,57,53,0.3);
+  border-radius:8px;
+  color:var(--red);
+  font-family:'Noto Naskh Arabic',serif;
+  font-size:12px;
+  cursor:pointer;
+  transition:var(--transition);
+}
+
+.btn-danger:hover { background:rgba(229,57,53,0.06); border-color:var(--red); }
+
+/* User list */
+.user-row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 16px;
+  border-bottom:1px solid var(--beige-dark);
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.user-row:last-child { border-bottom:none; }
+
+.user-info-name { font-size:14px; font-weight:700; color:var(--ink); }
+.user-info-meta { font-size:11px; color:var(--ink-light); margin-top:2px; font-family:'Lora',serif; font-style:italic; }
+
+.role-badge {
+  display:inline-block;
+  padding:3px 10px;
+  border-radius:12px;
+  font-size:11px;
+  font-weight:700;
+}
+
+.role-super_admin { background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:var(--forest-dark); }
+.role-it { background:rgba(26,115,232,0.12); color:#1a73e8; }
+.role-area_manager { background:rgba(80,95,80,0.12); color:var(--forest-dark); }
+.role-branch_manager { background:var(--beige-dark); color:var(--ink-light); }
+
+/* Review cards */
+.review-card {
+  background:var(--beige);
+  border-radius:12px;
+  border:1px solid var(--beige-dark);
+  margin-bottom:10px;
+  overflow:hidden;
+  animation:fadeIn .3s ease;
+}
+
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+.review-card.complaint { border-right:3px solid var(--red); }
+.review-card.positive { border-right:3px solid var(--forest); }
+
+.review-card-head {
+  padding:10px 14px;
+  background:rgba(255,255,255,0.5);
+  border-bottom:1px solid var(--beige-dark);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+.review-card-body { padding:12px 14px; }
+
+.review-stars-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+.stars-display { font-size:14px; color:#d9c5a8; letter-spacing:1px; }
+.stars-display .lit { color:#e9a825; }
+
+.review-comment { font-size:13px; color:var(--ink-light); line-height:1.6; }
+
+.complaint-badge {
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  background:rgba(229,57,53,0.1);
+  color:var(--red);
+  font-size:11px;
+  font-weight:700;
+  padding:2px 8px;
+  border-radius:10px;
+}
+
+.positive-badge {
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  background:rgba(80,95,80,0.1);
+  color:var(--forest-dark);
+  font-size:11px;
+  font-weight:700;
+  padding:2px 8px;
+  border-radius:10px;
+}
+
+/* Branch table */
+.branch-table { width:100%; border-collapse:collapse; font-size:13px; }
+.branch-table th { padding:10px 12px; text-align:right; font-weight:700; color:var(--forest-dark); border-bottom:1.5px solid var(--beige-dark); font-size:12px; white-space:nowrap; }
+.branch-table td { padding:10px 12px; border-bottom:1px solid var(--beige-dark); vertical-align:middle; }
+.branch-table tr:last-child td { border-bottom:none; }
+.branch-table tr:hover td { background:rgba(80,95,80,0.02); }
+
+/* Filter bar */
+.filter-bar {
+  display:flex;
+  gap:8px;
+  margin-bottom:14px;
+  flex-wrap:wrap;
+}
+
+.filter-select {
+  flex:1;
+  min-width:120px;
+  padding:9px 14px;
+  border:1.5px solid var(--beige-dark);
+  border-radius:10px;
+  background:var(--beige);
+  font-family:'Noto Naskh Arabic',serif;
+  font-size:13px;
+  color:var(--ink);
+  outline:none;
+  cursor:pointer;
+}
+
+/* Empty state */
+.empty-state {
+  text-align:center;
+  padding:32px;
+  color:var(--ink-light);
+  opacity:.5;
+  font-size:14px;
+}
+
+/* Loading */
+.loading { text-align:center; padding:20px; color:var(--ink-light); font-size:13px; }
+
+/* Toast */
+.toast {
+  position:fixed;
+  bottom:28px;
+  left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--forest-dark);
+  color:#fff;
+  padding:12px 24px;
+  border-radius:30px;
+  font-size:13px;
+  font-weight:600;
+  box-shadow:0 6px 24px rgba(0,0,0,0.2);
+  z-index:999;
+  transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  white-space:nowrap;
+}
+
+.toast.show { transform:translateX(-50%) translateY(0); }
+
+/* Region badge */
+.region-badge {
+  display:inline-block;
+  background:rgba(80,95,80,0.1);
+  color:var(--forest-dark);
+  font-size:11px;
+  font-weight:600;
+  padding:2px 8px;
+  border-radius:10px;
+}
+
+/* Photo thumb */
+.review-photo { width:100%; max-height:160px; object-fit:cover; border-radius:8px; margin-top:8px; }
+
+/* Permission notice */
+.permission-notice {
+  background:rgba(80,95,80,0.06);
+  border:1px solid var(--forest-pale);
+  border-radius:12px;
+  padding:14px 16px;
+  font-size:13px;
+  color:var(--forest-dark);
+  margin-bottom:14px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <span class="login-brand">نمق</span>
+      <div class="login-sub">Admin Dashboard · لوحة الإدارة</div>
+    </div>
+    <div class="login-title">تسجيل الدخول</div>
+
+    <div class="field-group">
+      <label class="field-label">📧 البريد الإلكتروني</label>
+      <input type="email" class="field-input" id="login-email" placeholder="admin@namaq.com" style="direction:ltr">
+    </div>
+    <div class="field-group">
+      <label class="field-label">🔑 كلمة المرور</label>
+      <input type="password" class="field-input" id="login-password" placeholder="••••••••"
+        onkeydown="if(event.key==='Enter') doLogin()">
+    </div>
+
+    <button class="login-btn" id="login-btn" onclick="doLogin()">دخول</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD ===== -->
+<div class="dashboard" id="dashboard">
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div>
+      <div class="top-bar-brand">نمق</div>
+      <div class="top-bar-role" id="top-role-label">لوحة الإدارة</div>
+    </div>
+    <button class="top-logout-btn" onclick="doLogout()">خروج 🔓</button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row" id="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" id="stat-total">—</div>
+      <div class="stat-label">إجمالي التقييمات</div>
+    </div>
+    <div class="stat-card alert">
+      <div class="stat-num" id="stat-complaints">—</div>
+      <div class="stat-label">شكاوى</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-avg">—</div>
+      <div class="stat-label">المعدل العام</div>
+    </div>
+    <div class="stat-card" id="stat-branches-card">
+      <div class="stat-num" id="stat-branches">—</div>
+      <div class="stat-label">الفروع</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs" id="tabs-bar">
+    <button class="tab-btn active" onclick="switchTab('reviews')">📊 التقييمات</button>
+    <button class="tab-btn" onclick="switchTab('branches')" id="tab-branches-btn">🏪 الفروع</button>
+    <button class="tab-btn" onclick="switchTab('users')" id="tab-users-btn">👥 المستخدمون</button>
+    <button class="tab-btn" onclick="switchTab('regions')" id="tab-regions-btn">🗺️ المناطق</button>
+  </div>
+
+  <!-- TAB: REVIEWS -->
+  <div class="tab-content active" id="tab-reviews">
+    <div class="filter-bar">
+      <select class="filter-select" id="filter-branch" onchange="loadReviewsUI()">
+        <option value="">كل الفروع</option>
+      </select>
+      <select class="filter-select" id="filter-type" onchange="loadReviewsUI()">
+        <option value="">كل التقييمات</option>
+        <option value="complaint">شكاوى فقط</option>
+        <option value="positive">إيجابية فقط</option>
+      </select>
+      <button class="btn-primary" onclick="exportReviewsCSV()">📥 CSV</button>
+    </div>
+    <div id="reviews-list"><div class="loading">⏳ جاري التحميل...</div></div>
+  </div>
+
+  <!-- TAB: BRANCHES -->
+  <div class="tab-content" id="tab-branches">
+    <div class="panel" id="add-branch-panel">
+      <div class="panel-head">➕ إضافة فرع جديد</div>
+      <div class="panel-body">
+        <div class="form-grid">
+          <div>
+            <label class="field-label">اسم الفرع *</label>
+            <input type="text" class="field-input" id="nb-name" placeholder="مثال: الملقا">
+          </div>
+          <div>
+            <label class="field-label">المدينة *</label>
+            <input type="text" class="field-input" id="nb-city" placeholder="مثال: الرياض">
+          </div>
+          <div>
+            <label class="field-label">المنطقة</label>
+            <input type="text" class="field-input" id="nb-region" placeholder="مثال: منطقة الرياض">
+          </div>
+          <div>
+            <label class="field-label">رابط Google Maps</label>
+            <input type="url" class="field-input" id="nb-url" placeholder="https://g.page/r/..." style="direction:ltr;font-size:12px">
+          </div>
+        </div>
+        <button class="btn-primary" onclick="addBranchAdmin()">إضافة الفرع ✓</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <span>قائمة الفروع</span>
+        <span id="branches-count-badge" style="background:var(--forest);color:#fff;padding:2px 10px;border-radius:12px;font-size:12px;font-family:'Cormorant Garamond',serif">0</span>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="branch-table">
+          <thead>
+            <tr>
+              <th>الفرع</th>
+              <th>المدينة</th>
+              <th>المنطقة</th>
+              <th>التقييمات</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="branches-tbody">
+            <tr><td colspan="5" class="empty-state">لا توجد فروع</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: USERS -->
+  <div class="tab-content" id="tab-users">
+    <div class="panel" id="add-user-panel">
+      <div class="panel-head">➕ إضافة مستخدم جديد</div>
+      <div class="panel-body">
+        <div class="form-grid">
+          <div>
+            <label class="field-label">الاسم *</label>
+            <input type="text" class="field-input" id="nu-name" placeholder="اسم المستخدم">
+          </div>
+          <div>
+            <label class="field-label">البريد الإلكتروني *</label>
+            <input type="email" class="field-input" id="nu-email" placeholder="user@namaq.com" style="direction:ltr">
+          </div>
+          <div>
+            <label class="field-label">الصلاحية *</label>
+            <select class="field-input" id="nu-role">
+              <option value="branch_manager">مدير فرع</option>
+              <option value="area_manager">مدير منطقة</option>
+              <option value="it">IT / مطور</option>
+              <option value="super_admin">مدير عام</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">الفرع / المنطقة</label>
+            <input type="text" class="field-input" id="nu-scope" placeholder="اسم الفرع أو المنطقة">
+          </div>
+        </div>
+        <div style="background:rgba(229,150,0,0.08);border:1px solid rgba(229,150,0,0.2);border-radius:8px;padding:10px 12px;font-size:12px;color:#a07020;margin-bottom:12px">
+          ⚠️ بعد إضافة المستخدم هنا، يجب إنشاء حسابه في Firebase Authentication يدوياً من <a href="https://console.firebase.google.com/project/namaq-menu/authentication/users" target="_blank" style="color:var(--forest)">هذا الرابط</a> بنفس البريد الإلكتروني.
+        </div>
+        <button class="btn-primary" onclick="addUserAdmin()">إضافة المستخدم ✓</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">المستخدمون</div>
+      <div id="users-list"><div class="loading">⏳ جاري التحميل...</div></div>
+    </div>
+  </div>
+
+  <!-- TAB: REGIONS -->
+  <div class="tab-content" id="tab-regions">
+    <div class="panel" id="add-region-panel">
+      <div class="panel-head">➕ إضافة منطقة</div>
+      <div class="panel-body">
+        <div class="form-grid">
+          <div>
+            <label class="field-label">اسم المنطقة *</label>
+            <input type="text" class="field-input" id="nr-name" placeholder="مثال: منطقة الرياض">
+          </div>
+          <div>
+            <label class="field-label">مدير المنطقة</label>
+            <input type="text" class="field-input" id="nr-manager" placeholder="البريد الإلكتروني للمدير">
+          </div>
+        </div>
+        <button class="btn-primary" onclick="addRegionAdmin()">إضافة المنطقة ✓</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">المناطق</div>
+      <div id="regions-list"><div class="loading">⏳ جاري التحميل...</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ===== FIREBASE ===== -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, doc, addDoc, getDoc, setDoc, getDocs, query, where, orderBy, serverTimestamp, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyClW2jkvRKmVRfJY02nKCE3iHAs89BjwcM",
+  authDomain: "namaq-menu.firebaseapp.com",
+  projectId: "namaq-menu",
+  storageBucket: "namaq-menu.firebasestorage.app",
+  messagingSenderId: "98198330180",
+  appId: "1:98198330180:web:1ad07cc5786322046e1511"
+};
+
+const app  = initializeApp(firebaseConfig);
+const db   = getFirestore(app);
+const auth = getAuth(app);
+
+window._db   = db;
+window._auth = auth;
+window._fb   = { collection, doc, addDoc, getDoc, setDoc, getDocs, query, where, orderBy, serverTimestamp, deleteDoc, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword };
+
+// ── AUTH STATE ──
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const snap = await getDoc(doc(db, 'users', user.uid));
+    if (snap.exists()) {
+      window._currentUser = { uid: user.uid, ...snap.data() };
+      showDashboard(window._currentUser);
+    } else {
+      await signOut(auth);
+      showLoginError('المستخدم غير مسجل في النظام');
+    }
+  } else {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('dashboard').classList.remove('visible');
+  }
+});
+</script>
+
+<script>
+/* ═══════════════════════════════════════════
+   ROLE LABELS
+═══════════════════════════════════════════ */
+const ROLE_LABELS = {
+  super_admin: '⭐ مدير عام',
+  it: '💻 مطور IT',
+  area_manager: '🗺️ مدير منطقة',
+  branch_manager: '📍 مدير فرع'
+};
+
+/* ═══════════════════════════════════════════
+   LOGIN
+═══════════════════════════════════════════ */
+async function doLogin() {
+  const email    = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const btn      = document.getElementById('login-btn');
+  const errEl    = document.getElementById('login-error');
+
+  if (!email || !password) { showLoginError('يرجى إدخال البريد وكلمة المرور'); return; }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ جاري الدخول...';
+  errEl.style.display = 'none';
+
+  try {
+    await window._fb.signInWithEmailAndPassword(window._auth, email, password);
+    // onAuthStateChanged will handle the rest
+  } catch(e) {
+    const msgs = {
+      'auth/wrong-password':'كلمة المرور غير صحيحة',
+      'auth/user-not-found':'البريد الإلكتروني غير موجود',
+      'auth/invalid-credential':'بيانات الدخول غير صحيحة',
+      'auth/too-many-requests':'محاولات كثيرة — يرجى الانتظار'
+    };
+    showLoginError(msgs[e.code] || e.message);
+    btn.disabled = false;
+    btn.textContent = 'دخول';
+  }
+}
+
+function showLoginError(msg) {
+  const el = document.getElementById('login-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+  document.getElementById('login-btn').disabled = false;
+  document.getElementById('login-btn').textContent = 'دخول';
+}
+
+function doLogout() {
+  window._fb.signOut(window._auth);
+  document.getElementById('dashboard').classList.remove('visible');
+  document.getElementById('login-screen').style.display = 'flex';
+  showToast('تم تسجيل الخروج');
+}
+
+/* ═══════════════════════════════════════════
+   SHOW DASHBOARD based on role
+═══════════════════════════════════════════ */
+function showDashboard(user) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('dashboard').classList.add('visible');
+  document.getElementById('login-btn').disabled = false;
+  document.getElementById('login-btn').textContent = 'دخول';
+
+  const role = user.role;
+  document.getElementById('top-role-label').textContent = `${ROLE_LABELS[role] || role} — ${user.name || ''}`;
+
+  // Show/hide tabs based on role
+  const isSuper = (role === 'super_admin');
+  const isIT    = (role === 'it');
+  const isArea  = (role === 'area_manager');
+
+  document.getElementById('tab-users-btn').style.display    = isSuper ? '' : 'none';
+  document.getElementById('tab-regions-btn').style.display  = isSuper ? '' : 'none';
+  document.getElementById('tab-branches-btn').style.display = (isSuper || isIT) ? '' : 'none';
+  document.getElementById('add-branch-panel').style.display = (isSuper || isIT) ? '' : 'none';
+  document.getElementById('add-user-panel').style.display   = isSuper ? '' : 'none';
+  document.getElementById('add-region-panel').style.display = isSuper ? '' : 'none';
+
+  loadStats();
+  loadReviewsUI();
+  if (isSuper || isIT) loadBranchesUI();
+  if (isSuper) { loadUsersUI(); loadRegionsUI(); }
+}
+
+/* ═══════════════════════════════════════════
+   STATS
+═══════════════════════════════════════════ */
+async function loadStats() {
+  const user = window._currentUser;
+  try {
+    const { collection, query, where, getDocs } = window._fb;
+    let q = collection(window._db, 'reviews');
+
+    if (user.role === 'branch_manager') {
+      q = query(q, where('branchKey', '==', user.scope));
+    } else if (user.role === 'area_manager') {
+      q = query(q, where('region', '==', user.scope));
+    }
+
+    const snap = await getDocs(q);
+    const reviews = snap.docs.map(d => d.data());
+    const complaints = reviews.filter(r => r.isComplaint);
+    const avg = reviews.length
+      ? (reviews.reduce((s, r) => s + (r.quickStar || 0), 0) / reviews.length).toFixed(1)
+      : '—';
+
+    document.getElementById('stat-total').textContent     = reviews.length;
+    document.getElementById('stat-complaints').textContent = complaints.length;
+    document.getElementById('stat-avg').textContent       = avg;
+
+    // Branches count
+    const bSnap = await getDocs(collection(window._db, 'branches'));
+    document.getElementById('stat-branches').textContent = bSnap.size;
+  } catch(e) {
+    console.error('Stats error:', e);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   REVIEWS
+═══════════════════════════════════════════ */
+async function loadReviewsUI() {
+  const list = document.getElementById('reviews-list');
+  list.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
+
+  const user   = window._currentUser;
+  const bFilter = document.getElementById('filter-branch')?.value;
+  const tFilter = document.getElementById('filter-type')?.value;
+
+  try {
+    const { collection, query, where, orderBy, getDocs } = window._fb;
+    const constraints = [orderBy('createdAt', 'desc')];
+
+    if (user.role === 'branch_manager') {
+      constraints.unshift(where('branchKey', '==', user.scope));
+    } else if (user.role === 'area_manager') {
+      constraints.unshift(where('region', '==', user.scope));
+    } else if (bFilter) {
+      constraints.unshift(where('branchKey', '==', bFilter));
+    }
+
+    const q    = query(collection(window._db, 'reviews'), ...constraints);
+    const snap = await getDocs(q);
+    let reviews = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    if (tFilter === 'complaint') reviews = reviews.filter(r => r.isComplaint);
+    if (tFilter === 'positive')  reviews = reviews.filter(r => !r.isComplaint);
+
+    if (!reviews.length) {
+      list.innerHTML = '<div class="empty-state">📭 لا توجد تقييمات</div>';
+      return;
+    }
+
+    // Sort: complaints first
+    reviews.sort((a, b) => {
+      if (a.isComplaint && !b.isComplaint) return -1;
+      if (!a.isComplaint && b.isComplaint) return 1;
+      return 0;
+    });
+
+    list.innerHTML = reviews.map(r => {
+      const isC = r.isComplaint;
+      const dateStr = r.createdAt?.toDate?.()?.toLocaleDateString('ar-SA', {weekday:'short',year:'numeric',month:'short',day:'numeric'}) || r.dateStr || '';
+      const timeStr = r.createdAt?.toDate?.()?.toLocaleTimeString('ar-SA', {hour:'2-digit',minute:'2-digit'}) || r.timeStr || '';
+      const stars = [1,2,3,4,5].map(i => `<span class="${i<=(r.quickStar||0)?'lit':''}">★</span>`).join('');
+      const photo = r.photo ? `<img src="${r.photo}" class="review-photo" alt="صورة الشكوى">` : '';
+      const comment = r.comment ? `<div class="review-comment">💬 ${r.comment}</div>${photo}` : photo;
+
+      return `
+        <div class="review-card ${isC?'complaint':'positive'}">
+          <div class="review-card-head">
+            <div>
+              <span class="${isC?'complaint-badge':'positive-badge'}">${isC?'🚨 شكوى':'✅ إيجابي'}</span>
+              <span style="font-size:13px;font-weight:700;margin-right:6px">فاتورة #${r.invoice||'—'}</span>
+              <span style="font-size:11px;font-family:'Lora',serif;font-style:italic;color:var(--ink-light)">${r.branch||''}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:var(--ink-light);font-family:'Lora',serif;font-style:italic">${dateStr} · ${timeStr}</span>
+              <button class="btn-danger" onclick="deleteReviewAdmin('${r.id}')">🗑</button>
+            </div>
+          </div>
+          <div class="review-card-body">
+            <div class="review-stars-row">
+              <div class="stars-display">${stars}</div>
+              <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:${isC?'var(--red)':'var(--forest)'}">${r.quickStar||0}/5</span>
+            </div>
+            ${comment}
+          </div>
+        </div>`;
+    }).join('');
+
+    // Populate branch filter
+    const branchSet = new Set(reviews.map(r => r.branchKey).filter(Boolean));
+    const filterSel = document.getElementById('filter-branch');
+    if (filterSel && filterSel.options.length <= 1) {
+      branchSet.forEach(k => {
+        const opt = document.createElement('option');
+        opt.value = k; opt.textContent = k;
+        filterSel.appendChild(opt);
+      });
+    }
+  } catch(e) {
+    list.innerHTML = `<div class="empty-state">⚠️ خطأ: ${e.message}</div>`;
+  }
+}
+
+async function deleteReviewAdmin(id) {
+  if (!confirm('حذف هذا التقييم؟')) return;
+  try {
+    await window._fb.deleteDoc(window._fb.doc(window._db, 'reviews', id));
+    showToast('تم حذف التقييم');
+    loadReviewsUI();
+    loadStats();
+  } catch(e) { showToast('⚠️ خطأ في الحذف'); }
+}
+
+function exportReviewsCSV() {
+  showToast('📥 يرجى استخدام فلتر الفروع ثم التصدير');
+}
+
+/* ═══════════════════════════════════════════
+   BRANCHES
+═══════════════════════════════════════════ */
+async function loadBranchesUI() {
+  const tbody = document.getElementById('branches-tbody');
+  const { collection, getDocs } = window._fb;
+  try {
+    const snap = await getDocs(collection(window._db, 'branches'));
+    document.getElementById('branches-count-badge').textContent = snap.size;
+
+    if (!snap.size) {
+      tbody.innerHTML = '<tr><td colspan="5" class="empty-state">لا توجد فروع</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = snap.docs.map(d => {
+      const b = d.data();
+      return `
+        <tr>
+          <td><strong>${b.name||d.id}</strong></td>
+          <td style="font-family:'Lora',serif;font-style:italic;color:var(--gold)">${b.city||'—'}</td>
+          <td><span class="region-badge">${b.region||'—'}</span></td>
+          <td style="font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--forest)">—</td>
+          <td><button class="btn-danger" onclick="deleteBranchAdmin('${d.id}')">حذف</button></td>
+        </tr>`;
+    }).join('');
+  } catch(e) {
+    tbody.innerHTML = `<tr><td colspan="5" class="empty-state">⚠️ ${e.message}</td></tr>`;
+  }
+}
+
+async function addBranchAdmin() {
+  const name   = document.getElementById('nb-name').value.trim();
+  const city   = document.getElementById('nb-city').value.trim();
+  const region = document.getElementById('nb-region').value.trim();
+  const url    = document.getElementById('nb-url').value.trim();
+  if (!name || !city) { showToast('⚠️ الاسم والمدينة مطلوبان'); return; }
+
+  const key = name.replace(/\s+/g, '');
+  try {
+    await window._fb.setDoc(window._fb.doc(window._db, 'branches', key), {
+      name: `فرع ${name}`, city, region: region || 'غير محدد',
+      reviewUrl: url || '', createdAt: window._fb.serverTimestamp()
+    });
+    showToast(`✅ تم إضافة فرع ${name}`);
+    ['nb-name','nb-city','nb-region','nb-url'].forEach(id => document.getElementById(id).value = '');
+    loadBranchesUI();
+    loadStats();
+  } catch(e) { showToast('⚠️ خطأ: ' + e.message); }
+}
+
+async function deleteBranchAdmin(key) {
+  if (!confirm('حذف هذا الفرع؟')) return;
+  try {
+    await window._fb.deleteDoc(window._fb.doc(window._db, 'branches', key));
+    showToast('تم حذف الفرع');
+    loadBranchesUI();
+  } catch(e) { showToast('⚠️ خطأ'); }
+}
+
+/* ═══════════════════════════════════════════
+   USERS
+═══════════════════════════════════════════ */
+async function loadUsersUI() {
+  const list = document.getElementById('users-list');
+  const { collection, getDocs } = window._fb;
+  try {
+    const snap = await getDocs(collection(window._db, 'users'));
+    if (!snap.size) { list.innerHTML = '<div class="empty-state">لا يوجد مستخدمون</div>'; return; }
+    list.innerHTML = snap.docs.map(d => {
+      const u = d.data();
+      return `
+        <div class="user-row">
+          <div class="user-info">
+            <div class="user-info-name">${u.name||d.id}</div>
+            <div class="user-info-meta">${u.email||''} · ${u.scope||''}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="role-badge role-${u.role}">${ROLE_LABELS[u.role]||u.role}</span>
+            <button class="btn-danger" onclick="deleteUserAdmin('${d.id}')">حذف</button>
+          </div>
+        </div>`;
+    }).join('');
+  } catch(e) { list.innerHTML = `<div class="empty-state">⚠️ ${e.message}</div>`; }
+}
+
+async function addUserAdmin() {
+  const name  = document.getElementById('nu-name').value.trim();
+  const email = document.getElementById('nu-email').value.trim();
+  const role  = document.getElementById('nu-role').value;
+  const scope = document.getElementById('nu-scope').value.trim();
+  if (!name || !email) { showToast('⚠️ الاسم والبريد مطلوبان'); return; }
+
+  // We save to Firestore users collection (auth account must be created separately)
+  // Use email as doc ID placeholder until we have UID
+  const tempId = email.replace(/[.@]/g, '_');
+  try {
+    await window._fb.setDoc(window._fb.doc(window._db, 'users', tempId), {
+      name, email, role, scope,
+      createdAt: window._fb.serverTimestamp(),
+      note: 'يجب ربط هذا المستخدم بـ Firebase Auth UID'
+    });
+    showToast(`✅ تم حفظ بيانات ${name} — أنشئ حساب Firebase Auth بنفس البريد`);
+    ['nu-name','nu-email','nu-scope'].forEach(id => document.getElementById(id).value = '');
+    loadUsersUI();
+  } catch(e) { showToast('⚠️ خطأ: ' + e.message); }
+}
+
+async function deleteUserAdmin(id) {
+  if (!confirm('حذف هذا المستخدم؟')) return;
+  try {
+    await window._fb.deleteDoc(window._fb.doc(window._db, 'users', id));
+    showToast('تم الحذف');
+    loadUsersUI();
+  } catch(e) { showToast('⚠️ خطأ'); }
+}
+
+/* ═══════════════════════════════════════════
+   REGIONS
+═══════════════════════════════════════════ */
+async function loadRegionsUI() {
+  const list = document.getElementById('regions-list');
+  const { collection, getDocs } = window._fb;
+  try {
+    const snap = await getDocs(collection(window._db, 'regions'));
+    if (!snap.size) { list.innerHTML = '<div class="empty-state">لا توجد مناطق</div>'; return; }
+    list.innerHTML = snap.docs.map(d => {
+      const r = d.data();
+      return `
+        <div class="user-row">
+          <div class="user-info">
+            <div class="user-info-name">${r.name||d.id}</div>
+            <div class="user-info-meta">المدير: ${r.manager||'غير محدد'}</div>
+          </div>
+          <button class="btn-danger" onclick="deleteRegionAdmin('${d.id}')">حذف</button>
+        </div>`;
+    }).join('');
+  } catch(e) { list.innerHTML = `<div class="empty-state">⚠️ ${e.message}</div>`; }
+}
+
+async function addRegionAdmin() {
+  const name    = document.getElementById('nr-name').value.trim();
+  const manager = document.getElementById('nr-manager').value.trim();
+  if (!name) { showToast('⚠️ اسم المنطقة مطلوب'); return; }
+  const key = name.replace(/\s+/g,'');
+  try {
+    await window._fb.setDoc(window._fb.doc(window._db, 'regions', key), {
+      name, manager, createdAt: window._fb.serverTimestamp()
+    });
+    showToast(`✅ تم إضافة ${name}`);
+    document.getElementById('nr-name').value = '';
+    document.getElementById('nr-manager').value = '';
+    loadRegionsUI();
+  } catch(e) { showToast('⚠️ ' + e.message); }
+}
+
+async function deleteRegionAdmin(id) {
+  if (!confirm('حذف هذه المنطقة؟')) return;
+  try {
+    await window._fb.deleteDoc(window._fb.doc(window._db, 'regions', id));
+    showToast('تم الحذف');
+    loadRegionsUI();
+  } catch(e) { showToast('⚠️ خطأ'); }
+}
+
+/* ═══════════════════════════════════════════
+   TABS
+═══════════════════════════════════════════ */
+function switchTab(name) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById(`tab-${name}`).classList.add('active');
+  event.target.classList.add('active');
+
+  if (name === 'branches') loadBranchesUI();
+  if (name === 'users') loadUsersUI();
+  if (name === 'regions') loadRegionsUI();
+  if (name === 'reviews') loadReviewsUI();
+}
+
+/* ═══════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════ */
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+</script>
+</body>
+</html>
