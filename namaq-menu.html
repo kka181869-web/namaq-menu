@@ -3972,24 +3972,38 @@
     document.getElementById('qr-modal-sub').textContent = b.city;
     document.getElementById('qr-modal-url').textContent = fullUrl;
 
-    const canvas = document.createElement('canvas');
-    canvas.id = 'qr-modal-canvas-el';
     const container = document.getElementById('qr-modal-canvas');
-    container.innerHTML = '';
-    container.appendChild(canvas);
+    container.innerHTML = '<div style="padding:30px;text-align:center;font-size:13px;color:var(--ink-light)">جاري التوليد...</div>';
 
-    if (typeof QRCode !== 'undefined') {
+    document.getElementById('qr-modal-overlay').classList.add('open');
+
+    const generateQR = () => {
+      const canvas = document.createElement('canvas');
+      canvas.id = 'qr-modal-canvas-el';
+      container.innerHTML = '';
+      container.appendChild(canvas);
+
       QRCode.toCanvas(canvas, fullUrl, {
         width: 200, margin: 2,
         color: { dark: '#3a4a3a', light: '#ffffff' },
         errorCorrectionLevel: 'H'
+      }, (err) => {
+        if (err) container.innerHTML = `<div style="padding:16px;text-align:center;font-size:11px;color:#e53935">خطأ في التوليد</div>`;
       });
-    } else {
-      container.innerHTML = `<div style="padding:20px;font-family:'Noto Naskh Arabic',serif;font-size:12px;color:var(--ink-light);text-align:center">
-        QR غير متاح حالياً<br><small style="direction:ltr">${fullUrl}</small></div>`;
-    }
+    };
 
-    document.getElementById('qr-modal-overlay').classList.add('open');
+    if (typeof QRCode !== 'undefined') {
+      generateQR();
+    } else {
+      // Load library dynamically
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
+      script.onload = generateQR;
+      script.onerror = () => {
+        container.innerHTML = `<div style="padding:16px;font-family:'Noto Naskh Arabic',serif;font-size:12px;color:var(--ink-light);text-align:center;word-break:break-all">${fullUrl}</div>`;
+      };
+      document.head.appendChild(script);
+    }
   }
 
   function closeQRModal(event) {
