@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>نمق — قائمة الطعام</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<!-- ===== FIREBASE — لحفظ منتجات كل فرع بشكل دائم ===== -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, where, orderBy, getDocs, deleteDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyClW2jkvRKmVRfJY02nKCE3iHAs89BjwcM",
+  authDomain: "namaq-menu.firebaseapp.com",
+  projectId: "namaq-menu",
+  storageBucket: "namaq-menu.firebasestorage.app",
+  messagingSenderId: "98198330180",
+  appId: "1:98198330180:web:1ad07cc5786322046e1511"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+window._fbDb  = db;
+window._fbDoc = doc;
+window._fbGet = getDoc;
+window._fbSet = setDoc;
+window._fbCol = collection;
+window._fbAdd = addDoc;
+window._fbQuery = query;
+window._fbWhere = where;
+window._fbOrderBy = orderBy;
+window._fbGetDocs = getDocs;
+window._fbDelete = deleteDoc;
+window._fbServerTime = serverTimestamp;
+window._firebaseReady = true;
+document.dispatchEvent(new Event('firebase-ready'));
+</script>
+
+<style>
+/* ══ RESET ══ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-height:100vh;overflow-x:hidden}
+
+/* ══ TOKENS ══ */
+:root{
+  --bg:#f5f0e8;--bg2:#ede7d9;--white:#fdfaf5;
+  --forest:#4a5d4a;--forest-dark:#2e3d2e;--forest-light:#6b7d6b;
+  --gold:#b8965a;--gold2:#d4b07a;--gold3:#f0e4cc;
+  --ink:#1a1714;--ink2:#4a3f30;--muted:#8a7a68;
+  --red:#c0392b;--r:14px;
+  --t:all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ══ PAGER FLOAT BUTTON ══ */
+.pager-float{
+  position:fixed;bottom:20px;left:16px;z-index:999;
+  width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 100%);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 24px rgba(184,150,90,0.45);
+  cursor:pointer;border:2px solid rgba(255,255,255,0.5);
+  transition:var(--t);text-decoration:none;
+  animation:pagerPop 0.6s cubic-bezier(0.34,1.56,0.64,1) both,pagerFloat 3s ease-in-out infinite;
+}
+@keyframes pagerFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes pagerPop{from{opacity:0;transform:scale(0)}to{opacity:1;transform:scale(1)}}
+.pager-float:hover{transform:scale(1.1) translateY(-6px);box-shadow:0 8px 30px rgba(184,150,90,0.6)}
+.pager-float-icon{font-size:24px;line-height:1;color:var(--forest-dark)}
+.pager-float-tooltip{
+  position:absolute;left:64px;top:50%;transform:translateY(-50%);
+  background:var(--forest-dark);color:#fff;
+  padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;
+  white-space:nowrap;pointer-events:none;opacity:0;transition:var(--t);
+}
+.pager-float:hover .pager-float-tooltip{opacity:1}
+
+/* ══ PAGER HERO ══ */
+.pager-hero{
+  background:linear-gradient(160deg,#0f0e0c 0%,#1e1c16 60%,#2a2416 100%);
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:60px 24px 80px;position:relative;overflow:hidden;
+}
+.pager-hero::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,var(--gold),var(--gold2),var(--gold),transparent);
+}
+.pager-hero::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(184,150,90,0.08) 0%,transparent 60%);
+  pointer-events:none;
+}
+.pager-logo{text-align:center;margin-bottom:28px;position:relative;z-index:1}
+.pager-ring{
+  width:96px;height:96px;border-radius:50%;margin:0 auto 12px;
+  border:2px solid rgba(184,150,90,0.35);
+  background:rgba(184,150,90,0.06);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 0 8px rgba(184,150,90,0.04),0 0 40px rgba(184,150,90,0.1);
+  animation:glow 4s ease-in-out infinite;
+}
+@keyframes glow{
+  0%,100%{box-shadow:0 0 0 8px rgba(184,150,90,0.04),0 0 40px rgba(184,150,90,0.1)}
+  50%{box-shadow:0 0 0 14px rgba(184,150,90,0.03),0 0 60px rgba(184,150,90,0.18)}
+}
+.pager-ring-text{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--gold2);letter-spacing:1px}
+.pager-brand{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:500;color:#fff;letter-spacing:6px}
+.pager-slogan{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:rgba(255,255,255,0.38);margin-top:6px;letter-spacing:1px}
+
+.pager-bell{font-size:52px;display:block;margin-bottom:14px;animation:ring 4s ease-in-out infinite}
+@keyframes ring{
+  0%,100%{transform:rotate(0)}8%{transform:rotate(-12deg)}16%{transform:rotate(12deg)}
+  24%{transform:rotate(-8deg)}32%{transform:rotate(8deg)}40%{transform:rotate(0)}
+}
+.pager-h1{font-size:26px;font-weight:700;color:#fff;margin-bottom:8px;line-height:1.3;text-align:center}
+.pager-p{font-size:14px;color:rgba(255,255,255,0.45);line-height:1.7;max-width:280px;text-align:center;margin:0 auto}
+
+.pager-steps{
+  display:flex;flex-direction:column;gap:11px;
+  margin:32px 0 40px;width:100%;max-width:340px;position:relative;z-index:1;
+}
+.pager-step{
+  display:flex;align-items:center;gap:14px;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(184,150,90,0.18);
+  border-radius:13px;padding:13px 16px;transition:var(--t);
+}
+.pager-step:hover{background:rgba(184,150,90,0.07);border-color:rgba(184,150,90,0.35);transform:translateX(-3px)}
+.step-num{
+  width:33px;height:33px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 100%);
+  color:#0f0e0c;font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;
+}
+.step-label{font-size:14px;font-weight:700;color:#fff;margin-bottom:2px}
+.step-desc{font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5}
+
+.pager-cta{
+  width:100%;max-width:340px;text-align:center;position:relative;z-index:1;
+}
+.pager-btn{
+  display:block;width:100%;padding:19px 32px;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 50%,var(--gold) 100%);
+  color:#0f0e0c;text-decoration:none;border-radius:50px;
+  font-size:17px;font-weight:700;border:none;cursor:pointer;
+  box-shadow:0 8px 32px rgba(184,150,90,0.38);
+  transition:var(--t);position:relative;overflow:hidden;
+  animation:btnGlow 3s ease-in-out infinite;
+}
+@keyframes btnGlow{
+  0%,100%{box-shadow:0 8px 32px rgba(184,150,90,0.38)}
+  50%{box-shadow:0 12px 48px rgba(184,150,90,0.58)}
+}
+.pager-btn:hover{transform:translateY(-3px)}
+.pager-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
+  transform:translateX(-100%);transition:transform 0.6s ease;
+}
+.pager-btn:hover::before{transform:translateX(100%)}
+.pager-sub{font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;color:rgba(255,255,255,0.28);margin-top:10px;letter-spacing:1px}
+
+.scroll-hint{
+  position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
+  color:rgba(255,255,255,0.22);font-size:11px;letter-spacing:2px;
+  font-family:'Cormorant Garamond',serif;display:flex;flex-direction:column;
+  align-items:center;gap:4px;cursor:pointer;
+  animation:bounce 2s ease-in-out infinite;z-index:1;
+}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+/* ══ BRANCH BAR ══ */
+.branch-bar{
+  background:var(--forest-dark);padding:10px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 12px rgba(46,61,46,0.25);
+}
+.branch-select{
+  flex:1;padding:8px 12px;border:1.5px solid rgba(184,150,90,0.3);
+  border-radius:20px;background:rgba(255,255,255,0.07);
+  font-family:'Noto Naskh Arabic',serif;font-size:13px;font-weight:600;
+  color:var(--gold2);outline:none;cursor:pointer;
+}
+.branch-select option{background:var(--forest-dark);color:#fff}
+.qr-btn{
+  padding:8px 16px;border-radius:20px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 100%);
+  color:var(--forest-dark);font-family:'Noto Naskh Arabic',serif;
+  font-size:13px;font-weight:700;white-space:nowrap;
+  box-shadow:0 3px 10px rgba(184,150,90,0.3);transition:var(--t);flex-shrink:0;
+}
+.qr-btn:hover{transform:translateY(-1px)}
+
+/* ══ SITE HEADER ══ */
+.site-header{
+  background:linear-gradient(170deg,var(--forest-dark) 0%,var(--forest) 60%,#5f7260 100%);
+  padding:48px 24px 40px;text-align:center;position:relative;overflow:hidden;
+}
+.site-header::after{
+  content:'';position:absolute;bottom:-1px;left:0;right:0;height:32px;
+  background:var(--bg);clip-path:ellipse(55% 100% at 50% 100%);
+}
+.logo-frame{position:relative;display:inline-block;margin-bottom:20px}
+.logo-ring{
+  width:110px;height:110px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 50%,var(--gold) 100%);
+  padding:3px;box-shadow:0 0 0 6px rgba(255,255,255,0.08),0 12px 40px rgba(0,0,0,0.3);
+  animation:logoFloat 6s ease-in-out infinite;
+}
+@keyframes logoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.logo-inner{
+  width:100%;height:100%;border-radius:50%;background:var(--white);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.logo-inner img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.logo-fallback{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:600;color:var(--forest)}
+.logo-badge{
+  position:absolute;bottom:2px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(90deg,var(--gold) 0%,var(--gold2) 100%);
+  color:var(--forest-dark);font-size:9px;font-weight:700;letter-spacing:2px;
+  padding:3px 10px;border-radius:20px;font-family:'Cormorant Garamond',serif;
+  white-space:nowrap;text-transform:uppercase;
+}
+.header-brand{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;color:#fff;letter-spacing:6px;line-height:1}
+.header-divider{display:flex;align-items:center;justify-content:center;gap:10px;margin:10px auto;width:180px}
+.header-divider::before,.header-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(184,150,90,0.6),transparent)}
+.header-dot{width:5px;height:5px;background:var(--gold);border-radius:50%}
+.header-slogan{font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:rgba(240,225,210,0.85);letter-spacing:0.5px}
+
+/* ══ MAIN ══ */
+.page-wrap{max-width:520px;margin:0 auto;padding:0 0 60px}
+.main-content{padding:28px 18px 0}
+
+/* ══ SECTION HEADER ══ */
+.section-hd{display:flex;align-items:center;gap:12px;margin-bottom:20px;margin-top:36px}
+.section-hd:first-child{margin-top:0}
+.section-hd-icon{font-size:20px;line-height:1}
+.section-hd-info{}
+.section-hd-title{font-family:'Noto Naskh Arabic',serif;font-size:20px;font-weight:700;color:var(--forest-dark);line-height:1.2}
+.section-hd-sub{font-family:'Cormorant Garamond',serif;font-size:11px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-style:italic;margin-top:2px}
+.section-hd-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(74,93,74,0.2),transparent)}
+
+/* ══ PRODUCT GRID ══ */
+.product-grid{display:flex;flex-direction:column;gap:13px}
+
+/* ══ PRODUCT CARD ══ */
+.product-card{
+  background:var(--white);border-radius:20px;overflow:hidden;
+  box-shadow:0 2px 10px rgba(74,93,74,0.1),0 1px 2px rgba(255,255,255,0.8) inset;
+  border:1px solid rgba(255,255,255,0.7);transition:var(--t);
+  cursor:pointer;animation:cardIn 0.5s ease both;position:relative;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.product-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(74,93,74,0.15)}
+
+/* Card image */
+.card-img-wrap{width:100%;height:180px;overflow:hidden;position:relative;background:var(--bg2)}
+.card-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease;display:block}
+.product-card:hover .card-img-wrap img{transform:scale(1.05)}
+.card-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:52px;background:linear-gradient(135deg,var(--bg2) 0%,var(--bg) 100%)}
+
+/* Card body */
+.card-body{padding:14px 16px 16px}
+.card-name{font-family:'Noto Naskh Arabic',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.card-name-en{font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px;display:block}
+.card-meta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.card-price{display:flex;align-items:baseline;gap:3px}
+.price-num{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--forest);line-height:1}
+.price-unit{font-family:'Noto Naskh Arabic',serif;font-size:11px;color:var(--forest-light);font-weight:600}
+.card-cal{font-family:'Cormorant Garamond',serif;font-size:11px;font-style:italic;color:var(--muted);background:var(--gold3);padding:3px 8px;border-radius:10px}
+.card-allergens{margin-top:8px;display:flex;flex-wrap:wrap;gap:5px}
+.allergen-tag{font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(192,57,43,0.08);color:var(--red);font-weight:600;border:1px solid rgba(192,57,43,0.15)}
+.card-desc{margin-top:8px;font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ══ ORNAMENT ══ */
+.ornament{text-align:center;padding:24px 0 2px;color:var(--gold);font-size:16px;letter-spacing:10px;opacity:0.5}
+
+/* ══ RATING SECTION ══ */
+.rating-section{margin:36px 18px 0}
+
+.rating-intro{text-align:center;font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;opacity:.7}
+
+.quick-stars-card{
+  background:var(--white);border-radius:20px;padding:24px 20px;
+  box-shadow:0 2px 12px rgba(74,93,74,0.1);border:1px solid rgba(255,255,255,0.7);
+  text-align:center;
+}
+.quick-stars-title{font-size:18px;font-weight:700;color:var(--forest-dark);margin-bottom:4px}
+.quick-stars-sub{font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px}
+.quick-stars{display:inline-flex;gap:6px;direction:ltr;margin-bottom:10px}
+.qstar{background:none;border:none;font-size:38px;color:#d9c5a8;cursor:pointer;padding:3px;transition:color 0.15s ease,transform 0.2s cubic-bezier(0.34,1.56,0.64,1);-webkit-tap-highlight-color:transparent}
+.qstar.lit{color:#e9a825}
+.qstar:hover{transform:scale(1.2)}
+.quick-label{font-size:15px;font-weight:600;color:var(--muted);min-height:22px;transition:all 0.3s}
+
+/* Positive card */
+.pos-card{
+  background:var(--white);border-radius:20px;padding:24px 20px;
+  box-shadow:0 2px 12px rgba(74,93,74,0.1);border:1.5px solid rgba(74,93,74,0.2);
+  text-align:center;margin-top:12px;display:none;animation:cardIn 0.4s ease;
+}
+.pos-icon{font-size:36px;margin-bottom:10px}
+.pos-title{font-size:17px;font-weight:700;color:var(--forest-dark);margin-bottom:6px}
+.pos-sub{font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.5}
+.maps-btn{
+  display:block;width:100%;padding:14px 20px;
+  background:linear-gradient(135deg,#1a73e8 0%,#1557b0 100%);
+  color:#fff;text-decoration:none;border-radius:14px;
+  font-size:15px;font-weight:700;box-shadow:0 4px 16px rgba(26,115,232,0.3);
+  transition:var(--t);margin-bottom:10px;border:none;cursor:pointer;
+}
+.maps-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(26,115,232,0.4)}
+
+/* Negative card */
+.neg-card{
+  background:var(--white);border-radius:20px;padding:20px;
+  box-shadow:0 2px 12px rgba(74,93,74,0.1);border:1.5px solid rgba(192,57,43,0.18);
+  text-align:center;margin-top:12px;display:none;animation:cardIn 0.4s ease;
+}
+.neg-icon{font-size:32px;margin-bottom:8px}
+.neg-title{font-size:16px;font-weight:700;color:var(--red);margin-bottom:4px}
+.neg-sub{font-size:13px;color:var(--muted);margin-bottom:14px}
+
+/* Complaint form */
+.complaint-form{display:none;margin-top:12px;animation:cardIn 0.4s ease}
+.complaint-input{
+  width:100%;padding:12px 14px;border:1.5px solid var(--bg2);border-radius:12px;
+  background:var(--bg);font-family:'Noto Naskh Arabic',serif;font-size:14px;
+  color:var(--ink);outline:none;transition:var(--t);margin-bottom:10px;
+}
+.complaint-input:focus{border-color:var(--forest-light);background:#fff}
+.complaint-textarea{min-height:80px;resize:vertical;line-height:1.6}
+.complaint-submit{
+  width:100%;padding:13px;background:linear-gradient(135deg,var(--forest) 0%,var(--forest-dark) 100%);
+  color:#fff;border:none;border-radius:12px;font-family:'Noto Naskh Arabic',serif;
+  font-size:14px;font-weight:700;cursor:pointer;transition:var(--t);
+}
+.complaint-submit:hover{transform:translateY(-1px)}
+
+/* Success */
+.rating-success{display:none;text-align:center;padding:20px;animation:cardIn 0.5s ease}
+.rating-success-icon{font-size:40px;margin-bottom:8px}
+.rating-success-title{font-size:18px;font-weight:700;color:var(--forest-dark)}
+.rating-success-sub{font-size:13px;color:var(--muted);margin-top:4px;font-family:'Cormorant Garamond',serif;font-style:italic}
+
+/* Branch badge */
+.branch-tag{
+  display:inline-flex;align-items:center;gap:6px;margin:14px auto 0;
+  background:rgba(74,93,74,0.08);border:1px solid rgba(74,93,74,0.15);
+  border-radius:20px;padding:6px 14px;font-size:12px;color:var(--forest-dark);font-weight:600;
+}
+.branch-dot{width:7px;height:7px;background:var(--forest);border-radius:50%;animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ══ ADMIN PANEL ══ */
+.admin-gate{margin:24px 18px 0;text-align:center}
+.admin-gate-btn{
+  background:transparent;border:1.5px solid rgba(74,93,74,0.25);border-radius:20px;
+  padding:9px 20px;font-family:'Noto Naskh Arabic',serif;font-size:13px;font-weight:600;
+  color:var(--forest-light);cursor:pointer;transition:var(--t);
+}
+.admin-gate-btn:hover{border-color:var(--forest);color:var(--forest-dark);background:rgba(74,93,74,0.04)}
+
+.admin-pass-box{
+  display:none;margin:12px 18px 0;background:var(--white);border-radius:16px;
+  padding:18px;border:1.5px solid var(--bg2);animation:cardIn 0.3s ease;
+}
+.admin-pass-box.open{display:block}
+.admin-pass-row{display:flex;gap:8px}
+.admin-pass-input{
+  flex:1;padding:10px 14px;border:1.5px solid var(--bg2);border-radius:10px;
+  background:var(--bg);font-family:'Noto Naskh Arabic',serif;font-size:14px;
+  color:var(--ink);outline:none;direction:ltr;letter-spacing:3px;transition:var(--t);
+}
+.admin-pass-input:focus{border-color:var(--forest-light);background:#fff}
+.admin-pass-btn{
+  padding:10px 18px;background:var(--forest);color:#fff;border:none;
+  border-radius:10px;font-family:'Noto Naskh Arabic',serif;font-size:13px;font-weight:700;cursor:pointer;transition:var(--t);
+}
+.admin-pass-btn:hover{background:var(--forest-dark)}
+.admin-pass-error{display:none;font-size:12px;color:var(--red);text-align:center;margin-top:8px}
+
+/* Admin panel */
+.admin-panel{
+  display:none;margin:14px 18px 0;background:var(--white);border-radius:18px;
+  border:1.5px solid rgba(74,93,74,0.2);overflow:hidden;box-shadow:0 4px 20px rgba(74,93,74,0.1);
+  animation:cardIn 0.3s ease;
+}
+.admin-panel.open{display:block}
+.admin-section{padding:18px 18px 14px;border-bottom:1px solid var(--bg2)}
+.admin-section:last-child{border-bottom:none}
+.admin-section-title{font-size:14px;font-weight:700;color:var(--forest-dark);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.admin-badge{
+  display:inline-flex;padding:2px 9px;border-radius:10px;font-size:10px;font-weight:700;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 100%);color:var(--forest-dark);letter-spacing:1px;
+}
+.admin-row{display:flex;gap:9px;margin-bottom:9px}
+.admin-input{
+  flex:1;padding:10px 13px;border:1.5px solid var(--bg2);border-radius:10px;
+  background:var(--bg);font-family:'Noto Naskh Arabic',serif;font-size:13px;color:var(--ink);
+  outline:none;transition:var(--t);direction:rtl;
+}
+.admin-input:focus{border-color:var(--forest-light);background:#fff}
+.admin-input::placeholder{color:rgba(26,23,20,0.3)}
+.admin-select{
+  flex:1;padding:10px 13px;border:1.5px solid var(--bg2);border-radius:10px;
+  background:var(--bg);font-family:'Noto Naskh Arabic',serif;font-size:13px;color:var(--ink);
+  outline:none;cursor:pointer;transition:var(--t);
+}
+.admin-btn-add{
+  width:100%;padding:12px;border:none;border-radius:10px;cursor:pointer;
+  background:linear-gradient(135deg,var(--forest) 0%,var(--forest-dark) 100%);
+  color:#fff;font-family:'Noto Naskh Arabic',serif;font-size:14px;font-weight:700;
+  margin-top:4px;transition:var(--t);box-shadow:0 3px 10px rgba(74,93,74,0.25);
+}
+.admin-btn-add:hover{transform:translateY(-1px)}
+.admin-btn-del{
+  width:100%;padding:12px;border:none;border-radius:10px;cursor:pointer;
+  background:linear-gradient(135deg,var(--red) 0%,#922b21 100%);
+  color:#fff;font-family:'Noto Naskh Arabic',serif;font-size:13px;font-weight:700;
+  transition:var(--t);
+}
+.admin-btn-del.active{background:linear-gradient(135deg,#27ae60 0%,#1e8449 100%)}
+
+/* Image upload */
+.img-upload-zone{
+  border:2px dashed var(--bg2);border-radius:12px;padding:16px;text-align:center;
+  cursor:pointer;transition:var(--t);position:relative;min-height:80px;
+  display:flex;align-items:center;justify-content:center;background:var(--bg);margin-bottom:9px;
+}
+.img-upload-zone:hover{border-color:var(--forest-light);background:rgba(74,93,74,0.04)}
+.img-upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.img-preview{width:100%;height:100px;object-fit:cover;border-radius:8px;display:none;margin-bottom:6px}
+.img-placeholder{display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none}
+.img-placeholder-icon{font-size:24px}
+.img-placeholder-text{font-size:13px;font-weight:600;color:var(--forest-dark)}
+.img-placeholder-hint{font-size:10px;color:var(--muted);letter-spacing:1px;font-family:'Cormorant Garamond',serif;text-transform:uppercase}
+
+/* Delete badge on card */
+.del-badge{
+  display:none;position:absolute;top:8px;right:8px;
+  width:28px;height:28px;background:var(--red);color:#fff;border:none;
+  border-radius:50%;font-size:16px;font-weight:700;cursor:pointer;
+  align-items:center;justify-content:center;z-index:5;
+  box-shadow:0 2px 8px rgba(192,57,43,0.4);transition:var(--t);
+}
+.del-badge:hover{background:#922b21;transform:scale(1.1)}
+.product-card.del-mode .del-badge{display:flex}
+
+/* Edit img button */
+.card-img-edit{
+  display:none;position:absolute;bottom:8px;right:8px;
+  width:28px;height:28px;background:rgba(74,93,74,0.85);color:#fff;border:none;
+  border-radius:50%;font-size:13px;cursor:pointer;
+  align-items:center;justify-content:center;z-index:5;
+  box-shadow:0 2px 8px rgba(0,0,0,0.2);transition:var(--t);backdrop-filter:blur(4px);
+}
+.card-img-edit:hover{background:var(--forest-dark);transform:scale(1.1)}
+.product-card.img-mode .card-img-edit{display:flex}
+
+/* Branch url input */
+.branch-url-note{font-family:'Cormorant Garamond',serif;font-size:11px;font-style:italic;color:var(--muted);opacity:.6;margin-top:5px}
+
+/* ══ QR MODAL ══ */
+.qr-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:200;
+  display:none;align-items:center;justify-content:center;padding:20px;
+  backdrop-filter:blur(5px);
+}
+.qr-overlay.open{display:flex}
+.qr-modal{
+  background:var(--white);border-radius:24px;padding:28px 24px;
+  text-align:center;max-width:300px;width:100%;
+  box-shadow:0 20px 60px rgba(0,0,0,0.25);animation:cardIn 0.35s ease;
+}
+.qr-modal-title{font-size:18px;font-weight:700;color:var(--forest-dark);margin-bottom:3px}
+.qr-modal-city{font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;color:var(--gold);letter-spacing:1px;margin-bottom:16px}
+#qr-canvas-wrap{display:flex;justify-content:center;margin-bottom:12px}
+.qr-modal-url{
+  font-family:'Cormorant Garamond',serif;font-size:10px;color:var(--muted);
+  direction:ltr;word-break:break-all;background:var(--bg);
+  padding:6px 10px;border-radius:8px;margin-bottom:16px;opacity:.7;
+}
+.qr-btns{display:flex;gap:8px}
+.qr-dl-btn{
+  flex:1;padding:11px;background:linear-gradient(135deg,var(--forest) 0%,var(--forest-dark) 100%);
+  color:#fff;border:none;border-radius:10px;font-family:'Noto Naskh Arabic',serif;
+  font-size:13px;font-weight:700;cursor:pointer;transition:var(--t);
+}
+.qr-dl-btn:hover{transform:translateY(-1px)}
+.qr-close-btn{
+  padding:11px 16px;background:transparent;border:1.5px solid var(--bg2);
+  border-radius:10px;font-family:'Noto Naskh Arabic',serif;font-size:13px;
+  color:var(--muted);cursor:pointer;transition:var(--t);
+}
+.qr-close-btn:hover{border-color:var(--forest-light)}
+
+/* ══ DETAIL MODAL ══ */
+.detail-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:300;
+  display:none;align-items:flex-end;justify-content:center;
+  backdrop-filter:blur(6px);
+}
+.detail-overlay.open{display:flex;animation:overlayIn 0.3s ease}
+@keyframes overlayIn{from{opacity:0}to{opacity:1}}
+.detail-sheet{
+  background:var(--white);border-radius:24px 24px 0 0;width:100%;max-width:520px;
+  max-height:90vh;overflow-y:auto;animation:sheetUp 0.4s cubic-bezier(0.34,1.2,0.64,1);
+  padding-bottom:30px;
+}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.detail-handle{width:40px;height:4px;background:var(--bg2);border-radius:4px;margin:12px auto 0}
+.detail-close{
+  position:absolute;top:16px;left:16px;width:32px;height:32px;
+  background:rgba(26,23,20,0.07);border:none;border-radius:50%;font-size:17px;
+  color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--t);z-index:5;
+}
+.detail-close:hover{background:rgba(26,23,20,0.12)}
+.detail-hero{width:100%;height:240px;object-fit:cover;display:block;border-radius:20px 20px 0 0}
+.detail-hero-placeholder{width:100%;height:200px;display:flex;align-items:center;justify-content:center;font-size:64px;background:linear-gradient(135deg,var(--bg2) 0%,var(--bg) 100%);border-radius:20px 20px 0 0}
+.detail-body{padding:18px 20px 0}
+.detail-cat{
+  display:inline-flex;align-items:center;gap:5px;background:rgba(74,93,74,0.1);
+  color:var(--forest-dark);font-size:11px;font-weight:600;letter-spacing:1.5px;
+  text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:10px;
+}
+.detail-name{font-size:24px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.detail-name-en{font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;color:var(--muted);margin-bottom:14px;display:block}
+.detail-meta{display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap}
+.detail-price{display:flex;align-items:baseline;gap:4px}
+.detail-price-num{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;color:var(--forest)}
+.detail-price-unit{font-family:'Noto Naskh Arabic',serif;font-size:13px;color:var(--forest-light);font-weight:600}
+.detail-cal{
+  display:inline-flex;align-items:center;gap:4px;background:var(--gold3);
+  color:var(--muted);font-size:12px;font-weight:600;padding:6px 12px;border-radius:20px;
+  border:1px solid rgba(184,150,90,0.2);
+}
+.detail-divider{height:1px;background:var(--bg2);margin:14px 0}
+.detail-section-title{font-size:13px;font-weight:700;color:var(--forest-dark);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.detail-desc{font-size:14px;color:var(--muted);line-height:1.8}
+.detail-ings{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
+.ing-tag{background:var(--bg);border:1px solid var(--bg2);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--ink);font-weight:500}
+.detail-options{display:flex;flex-direction:column;gap:12px}
+.option-group{}
+.option-group-label{font-size:13px;font-weight:700;color:var(--forest-dark);margin-bottom:7px;display:flex;align-items:center;gap:5px}
+.option-group-items{display:flex;flex-wrap:wrap;gap:8px}
+.option-tag{
+  background:linear-gradient(135deg,var(--gold3) 0%,#f7eed8 100%);
+  border:1.5px solid rgba(184,150,90,0.35);border-radius:20px;
+  padding:7px 16px;font-size:13px;color:var(--forest-dark);font-weight:600;
+  display:flex;align-items:center;gap:5px;transition:var(--t);cursor:default;
+}
+.option-tag:hover{border-color:var(--gold);transform:translateY(-1px)}
+.detail-allergens{display:flex;flex-wrap:wrap;gap:6px}
+.detail-allergen{background:rgba(192,57,43,0.07);border:1px solid rgba(192,57,43,0.2);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--red);font-weight:600;display:flex;align-items:center;gap:4px}
+
+/* ══ TOAST ══ */
+.toast{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--forest-dark);color:#fff;padding:12px 24px;border-radius:30px;
+  font-size:13px;font-weight:600;box-shadow:0 6px 24px rgba(0,0,0,0.2);
+  z-index:999;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ══ FOOTER ══ */
+.site-footer{text-align:center;padding:28px 20px;font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;color:var(--muted);opacity:.5;letter-spacing:1px}
+
+/* Complaint card in admin */
+.complaint-card{background:var(--bg);border-radius:12px;border:1px solid rgba(192,57,43,0.15);border-right:3px solid var(--red);padding:12px 14px}
+.complaint-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:4px}
+.complaint-stars{font-size:13px;color:#e9a825;direction:ltr}
+.complaint-meta{font-size:10px;color:var(--muted);font-family:'Cormorant Garamond',serif;font-style:italic}
+.complaint-text{font-size:13px;color:var(--ink2);line-height:1.6}
+.complaint-del{background:none;border:none;color:rgba(192,57,43,0.5);cursor:pointer;font-size:13px;padding:2px}
+.complaint-del:hover{color:var(--red)}
+.complaints-empty{text-align:center;padding:20px;color:var(--muted);font-size:13px;opacity:.6}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:380px){
+  .header-brand{font-size:38px}
+  .logo-ring{width:96px;height:96px}
+  .card-name{font-size:15px}
+}
+@media(min-width:600px){
+  .page-wrap{max-width:600px}
+  .product-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .product-card{flex-direction:column}
+  .card-img-wrap{width:100%;height:160px}
+}
+@media(min-width:900px){
+  .page-wrap{max-width:860px}
+  .product-grid{grid-template-columns:1fr 1fr 1fr}
+}
+</style>
+</head>
+
+<body>
+
+<!-- PAGER FLOAT -->
+<a href="https://bajri.app" target="_blank" rel="noopener" class="pager-float" id="pager-float-btn" title="خدمة البيجر">
+  <span class="pager-float-icon">📟</span>
+  <span class="pager-float-tooltip">خدمة البيجر</span>
+</a>
+
+<!-- BRANCH BAR -->
+<div class="branch-bar" id="menu-start">
+  <select class="branch-select" id="branch-select" onchange="switchBranch()"></select>
+  <button class="qr-btn" onclick="showQR()">🔲 QR</button>
+</div>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="logo-frame">
+    <div class="logo-ring">
+      <div class="logo-inner">
+        <img src="1000199209.jpg" alt="نمق" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="logo-fallback" style="display:none">نمق</div>
+      </div>
+    </div>
+    <div class="logo-badge">Premium</div>
+  </div>
+  <h1 class="header-brand">نمق</h1>
+  <div class="header-divider"><div class="header-dot"></div><div class="header-dot"></div><div class="header-dot"></div></div>
+  <p class="header-slogan">نمق ليس مجرد قهوة...</p>
+</header>
+
+<!-- MAIN -->
+<div class="page-wrap">
+  <main class="main-content">
+
+    <div class="section-hd">
+      <span class="section-hd-icon">☕</span>
+      <div class="section-hd-info">
+        <h2 class="section-hd-title">مشروبات نمق</h2>
+        <div class="section-hd-sub">Signature Drinks</div>
+      </div>
+      <div class="section-hd-line"></div>
+    </div>
+    <div class="product-grid" id="drinks-grid"></div>
+
+    <div class="ornament">✦ ✦ ✦</div>
+
+    <div class="section-hd" style="margin-top:30px">
+      <span class="section-hd-icon">🍰</span>
+      <div class="section-hd-info">
+        <h2 class="section-hd-title">حلا نمق المميز</h2>
+        <div class="section-hd-sub">Premium Desserts</div>
+      </div>
+      <div class="section-hd-line"></div>
+    </div>
+    <div class="product-grid" id="sweets-grid"></div>
+
+    <!-- ══ BRANCH-SPECIFIC PRODUCTS — تظهر فقط لو الفرع عنده منتجات خاصة (مثل فروع المترو) ══ -->
+    <div id="branch-products-wrap" style="display:none">
+      <div class="ornament">✦ ✦ ✦</div>
+      <div class="section-hd" style="margin-top:30px">
+        <span class="section-hd-icon">⭐</span>
+        <div class="section-hd-info">
+          <h2 class="section-hd-title" id="branch-products-title">منتجات هذا الفرع</h2>
+          <div class="section-hd-sub">Branch Exclusive</div>
+        </div>
+        <div class="section-hd-line"></div>
+      </div>
+      <div class="product-grid" id="branch-products-grid"></div>
+    </div>
+
+  </main>
+
+  <!-- RATING -->
+  <div class="rating-section">
+    <div class="rating-intro">Share Your Experience</div>
+    <div class="quick-stars-card" id="step-quick">
+      <div class="quick-stars-title">كيف كانت تجربتك؟</div>
+      <div class="quick-stars-sub">Rate Your Overall Experience</div>
+      <div class="quick-stars">
+        <button class="qstar" onclick="handleStar(1)">★</button>
+        <button class="qstar" onclick="handleStar(2)">★</button>
+        <button class="qstar" onclick="handleStar(3)">★</button>
+        <button class="qstar" onclick="handleStar(4)">★</button>
+        <button class="qstar" onclick="handleStar(5)">★</button>
+      </div>
+      <div class="quick-label" id="quick-label">اختر تقييمك</div>
+    </div>
+
+    <!-- Positive -->
+    <div class="pos-card" id="step-pos">
+      <div class="pos-icon">🌟</div>
+      <div class="pos-title">يسعدنا أنك راضٍ!</div>
+      <div class="pos-sub">شاركنا تقييمك على خرائط جوجل ليستفيد منه الجميع</div>
+      <a id="maps-link" href="#" target="_blank" rel="noopener" class="maps-btn">✍️ اكتب تقييمك على Google Maps</a>
+    </div>
+
+    <!-- Negative -->
+    <div class="neg-card" id="step-neg">
+      <div class="neg-icon">💬</div>
+      <div class="neg-title">نأسف لذلك — رأيك يهمنا</div>
+      <div class="neg-sub">أخبرنا بما حدث وسنتواصل معك للتحسين</div>
+    </div>
+
+    <!-- Complaint form -->
+    <div class="complaint-form" id="complaint-form">
+      <div style="background:var(--white);border-radius:18px;padding:20px;box-shadow:0 2px 10px rgba(74,93,74,0.1);border:1px solid rgba(192,57,43,0.15)">
+        <div style="font-size:14px;font-weight:700;color:var(--forest-dark);margin-bottom:12px">📝 شاركنا تفاصيل تجربتك</div>
+        <input type="text" class="complaint-input" id="c-invoice" placeholder="🧾 رقم الفاتورة (اختياري)">
+        <textarea class="complaint-input complaint-textarea" id="c-comment" placeholder="💬 اكتب ملاحظاتك هنا..."></textarea>
+        <button class="complaint-submit" onclick="submitComplaint()">إرسال الشكوى للإدارة ✓</button>
+      </div>
+    </div>
+
+    <!-- Success -->
+    <div class="rating-success" id="rating-success">
+      <div class="rating-success-icon">🎉</div>
+      <div class="rating-success-title">شكراً على تقييمك!</div>
+      <div class="rating-success-sub">رأيك يساعدنا على التطور دائماً</div>
+    </div>
+
+    <div style="text-align:center">
+      <div class="branch-tag"><div class="branch-dot"></div><span id="branch-label">فرع الملقا · الرياض</span></div>
+    </div>
+  </div>
+
+  <!-- ADMIN GATE -->
+  <div class="admin-gate">
+    <button class="admin-gate-btn" onclick="toggleAdminGate()">⚙️ لوحة تحكم المدير</button>
+    <div class="admin-pass-box" id="admin-pass-box">
+      <div class="admin-pass-row">
+        <input type="password" class="admin-pass-input" id="admin-pass-input" placeholder="كلمة المرور" onkeydown="if(event.key==='Enter')checkAdminPass()">
+        <button class="admin-pass-btn" onclick="checkAdminPass()">دخول</button>
+      </div>
+      <div class="admin-pass-error" id="admin-pass-error">⚠️ كلمة المرور غير صحيحة</div>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div class="admin-panel" id="admin-panel">
+
+    <!-- Branch settings -->
+    <div class="admin-section">
+      <div class="admin-section-title">📍 إعدادات الفرع <span class="admin-badge" id="role-badge">مدير</span></div>
+      <div style="font-size:13px;font-weight:700;color:var(--forest-dark);margin-bottom:6px" id="admin-branch-name"></div>
+      <div style="font-size:11px;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);margin-bottom:10px" id="admin-branch-code"></div>
+      <div class="admin-row" style="margin-bottom:0">
+        <input type="url" class="admin-input" id="branch-url-input" placeholder="رابط Google Maps للتقييم" style="direction:ltr;font-size:12px">
+        <button class="admin-pass-btn" onclick="saveBranchUrl()" style="padding:10px 14px;white-space:nowrap">حفظ</button>
+      </div>
+      <div class="branch-url-note">كل مدير يعدّل رابط فرعه فقط</div>
+
+      <div style="margin-top:12px">
+        <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px">🔑 تغيير رابط البيجر</div>
+        <div class="admin-row" style="margin-bottom:0">
+          <input type="url" class="admin-input" id="pager-url-input" placeholder="https://bajri.app" style="direction:ltr;font-size:12px">
+          <button class="admin-pass-btn" onclick="savePagerUrl()" style="padding:10px 14px;white-space:nowrap">حفظ</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Branch-specific products — متاح لمدير الفرع والمدير العام -->
+    <div class="admin-section">
+      <div class="admin-section-title">⭐ منتجات خاصة بهذا الفرع <span class="admin-badge" style="background:linear-gradient(135deg,var(--forest) 0%,var(--forest-dark) 100%);color:#fff">📍 الفرع الحالي</span></div>
+      <div class="branch-url-note" style="margin-bottom:10px">تظهر فقط لعملاء هذا الفرع — مثل فروع المترو</div>
+      <div class="admin-row">
+        <input type="text" class="admin-input" id="bp-name" placeholder="اسم المنتج" style="flex:2">
+        <input type="number" class="admin-input" id="bp-price" placeholder="السعر" style="flex:1">
+      </div>
+      <div class="admin-row">
+        <input type="number" class="admin-input" id="bp-cal" placeholder="السعرات (اختياري)" style="flex:1">
+      </div>
+      <input type="text" class="admin-input" id="bp-desc" placeholder="وصف المنتج (اختياري)" style="width:100%;margin-bottom:9px">
+      <button class="admin-btn-add" onclick="addBranchProduct()">إضافة منتج للفرع ✓</button>
+    </div>
+
+    <!-- Add product -->
+    <div class="admin-section" id="super-only-add">
+      <div class="admin-section-title">➕ إضافة منتج جديد <span class="admin-badge">⭐ مدير عام</span></div>
+      <div class="admin-row">
+        <input type="text" class="admin-input" id="new-name" placeholder="اسم المنتج" style="flex:2">
+        <input type="number" class="admin-input" id="new-price" placeholder="السعر" style="flex:1">
+      </div>
+      <div class="admin-row">
+        <input type="number" class="admin-input" id="new-cal" placeholder="السعرات (اختياري)">
+        <select class="admin-select" id="new-cat">
+          <option value="drinks">مشروبات ☕</option>
+          <option value="sweets">حلويات 🍰</option>
+        </select>
+      </div>
+      <input type="text" class="admin-input" id="new-desc" placeholder="وصف المنتج (اختياري)" style="width:100%;margin-bottom:9px">
+      <input type="text" class="admin-input" id="new-allergens" placeholder="مسببات الحساسية مفصولة بفاصلة (اختياري)" style="width:100%;margin-bottom:9px">
+      <textarea class="admin-input" id="new-options" placeholder="خيارات إضافية — كل سطر فئة مستقلة، مثال:&#10;نوع القهوة: إثيوبي، كولومبي، برازيلي&#10;الإضافات: موهيتو، مشروب طاقة" style="width:100%;margin-bottom:9px;min-height:70px;resize:vertical;line-height:1.6"></textarea>
+      <div class="img-upload-zone" id="new-img-zone">
+        <input type="file" accept="image/*" onchange="handleNewImg(event)">
+        <img class="img-preview" id="new-img-preview">
+        <div class="img-placeholder" id="new-img-placeholder">
+          <div class="img-placeholder-icon">📷</div>
+          <div class="img-placeholder-text">اضغط لرفع صورة</div>
+          <div class="img-placeholder-hint">JPG · PNG · WEBP</div>
+        </div>
+      </div>
+      <button class="admin-btn-add" onclick="addProduct()">إضافة المنتج ✓</button>
+    </div>
+
+    <!-- Delete mode -->
+    <div class="admin-section" id="super-only-delete">
+      <div class="admin-section-title">🗑️ حذف منتج <span class="admin-badge">⭐ مدير عام</span></div>
+      <button class="admin-btn-del" id="del-toggle-btn" onclick="toggleDelMode()">تفعيل وضع الحذف</button>
+    </div>
+
+    <!-- Edit images -->
+    <div class="admin-section" id="super-only-img">
+      <div class="admin-section-title">🖼️ تعديل صور المنتجات <span class="admin-badge">⭐ مدير عام</span></div>
+      <button class="admin-btn-del" id="img-toggle-btn" onclick="toggleImgMode()" style="background:linear-gradient(135deg,var(--forest) 0%,var(--forest-dark) 100%)">تفعيل وضع تعديل الصور</button>
+      <input type="file" id="card-img-input" accept="image/*" style="display:none" onchange="applyCardImg(event)">
+    </div>
+
+    <!-- Logo upload -->
+    <div class="admin-section" id="super-only-logo">
+      <div class="admin-section-title">🐢 تغيير الشعار <span class="admin-badge">⭐ مدير عام</span></div>
+      <div class="img-upload-zone">
+        <input type="file" accept="image/*" onchange="handleLogoUpload(event)">
+        <div class="img-placeholder">
+          <div class="img-placeholder-icon">📷</div>
+          <div class="img-placeholder-text">اضغط لرفع شعار جديد</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Complaints viewer -->
+    <div class="admin-section">
+      <div class="admin-section-title">📬 الشكاوى والتقييمات <span class="admin-badge" id="complaints-count">0</span></div>
+      <div style="font-size:11px;color:var(--muted);opacity:.7;margin-bottom:10px">هذي شكاوى فرعك الحالي فقط</div>
+      <div id="complaints-list" style="display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto"></div>
+    </div>
+
+    <!-- Link to full hierarchical dashboard -->
+    <div class="admin-section" style="text-align:center">
+      <a href="namaq-admin.html" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 100%);color:var(--forest-dark);text-decoration:none;border-radius:12px;padding:12px 22px;font-family:'Noto Naskh Arabic',serif;font-size:13px;font-weight:700;box-shadow:0 3px 10px rgba(184,150,90,0.3)">
+        🏢 لوحة الإدارة الشاملة (المالك / الإقليم / المنطقة)
+      </a>
+      <div style="font-size:11px;color:var(--muted);opacity:.6;margin-top:8px;font-family:'Cormorant Garamond',serif;font-style:italic">لمستويات الإدارة الأعلى — تحتاج حساب مستقل</div>
+    </div>
+
+    <!-- Logout -->
+    <div class="admin-section" style="text-align:center">
+      <button onclick="adminLogout()" style="background:transparent;border:1.5px solid var(--bg2);border-radius:10px;padding:9px 20px;font-family:'Noto Naskh Arabic',serif;font-size:13px;color:var(--muted);cursor:pointer;transition:var(--t)">تسجيل خروج 🔓</button>
+    </div>
+
+  </div>
+
+  <footer class="site-footer">© نمق للقهوة المتخصصة · جميع الحقوق محفوظة</footer>
+</div>
+
+<!-- QR MODAL -->
+<div class="qr-overlay" id="qr-overlay" onclick="if(event.target===this)closeQR()">
+  <div class="qr-modal">
+    <div class="qr-modal-title" id="qr-title">اسم الفرع</div>
+    <div class="qr-modal-city" id="qr-city"></div>
+    <div id="qr-canvas-wrap"></div>
+    <div class="qr-modal-url" id="qr-url"></div>
+    <div class="qr-btns">
+      <button class="qr-dl-btn" onclick="downloadQR()">⬇️ تحميل PNG</button>
+      <button class="qr-close-btn" onclick="closeQR()">إغلاق</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="detail-overlay" id="detail-overlay" onclick="if(event.target===this)closeDetail()">
+  <div class="detail-sheet" style="position:relative">
+    <div class="detail-handle"></div>
+    <button class="detail-close" onclick="closeDetail()">→</button>
+    <div id="detail-hero-wrap"></div>
+    <div class="detail-body">
+      <div class="detail-cat" id="d-cat"></div>
+      <div class="detail-name" id="d-name"></div>
+      <span class="detail-name-en" id="d-name-en"></span>
+      <div class="detail-meta">
+        <div class="detail-price"><span class="detail-price-num" id="d-price"></span><span class="detail-price-unit">ر.س</span></div>
+        <div class="detail-cal" id="d-cal" style="display:none">🔥 <span id="d-cal-num"></span> سعرة</div>
+      </div>
+      <div id="d-desc-sec" style="display:none">
+        <div class="detail-divider"></div>
+        <div class="detail-section-title">📝 الوصف</div>
+        <div class="detail-desc" id="d-desc"></div>
+      </div>
+      <div id="d-options-sec" style="display:none">
+        <div class="detail-divider"></div>
+        <div class="detail-section-title">☕ الخيارات المتوفرة</div>
+        <div class="detail-options" id="d-options"></div>
+      </div>
+      <div id="d-allergy-sec" style="display:none">
+        <div class="detail-divider"></div>
+        <div class="detail-section-title">⚠️ مسببات الحساسية</div>
+        <div class="detail-allergens" id="d-allergens"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════
+   CONFIG — 🔧 عدّل هنا لكل فرع
+══════════════════════════════════════ */
+const ADMIN_PASSWORD = 'Namaq2026';            // ⭐ المدير العام — يعدّل القائمة الموحدة بالكامل
+const BRANCH_MGR_PASSWORD = 'Namaq-Branch26';  // 📍 مدير الفرع — يشوف القائمة ويعدّل إعدادات فرعه فقط
+
+const BRANCH_MAPPING = {
+  'N02':{ name:'فرع الملقا',         city:'الرياض',          region:'منطقة الرياض',     reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N03':{ name:'فرع تبوك 1',        city:'تبوك',            region:'منطقة تبوك',       reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N04':{ name:'فرع خميس مشيط',     city:'خميس مشيط',       region:'منطقة عسير',       reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N05':{ name:'فرع المنار',        city:'الرياض',          region:'منطقة الرياض',     reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N06':{ name:'فرع الخبر',         city:'الخبر',           region:'المنطقة الشرقية',  reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N07':{ name:'فرع القصيم',        city:'بريدة',           region:'منطقة القصيم',     reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N08':{ name:'فرع المدينة المنورة',city:'المدينة المنورة', region:'منطقة المدينة',    reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N09':{ name:'فرع الأحساء',       city:'الأحساء',         region:'المنطقة الشرقية',  reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N10':{ name:'فرع حائل',          city:'حائل',            region:'منطقة حائل',       reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N11':{ name:'فرع مكة المكرمة',   city:'مكة المكرمة',     region:'منطقة مكة',        reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N12':{ name:'فرع جازان',         city:'جازان',           region:'منطقة جازان',      reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N13':{ name:'فرع الخرج',         city:'الخرج',           region:'منطقة الرياض',     reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N14':{ name:'فرع جدة',           city:'جدة',             region:'منطقة مكة',        reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N15':{ name:'فرع الطائف',        city:'الطائف',          region:'منطقة مكة',        reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N16':{ name:'فرع سكاكا',         city:'سكاكا',           region:'منطقة الجوف',      reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N17':{ name:'فرع تبوك 2',        city:'تبوك',            region:'منطقة تبوك',       reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N18':{ name:'فرع الجبيل',        city:'الجبيل',          region:'المنطقة الشرقية',  reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N19':{ name:'فرع الدمام',        city:'الدمام',          region:'المنطقة الشرقية',  reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N20':{ name:'فرع جدة المروة',    city:'جدة',             region:'منطقة مكة',        reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N21':{ name:'فرع حفر الباطن',    city:'حفر الباطن',      region:'المنطقة الشرقية',  reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N22':{ name:'فرع الحمراء',       city:'الرياض',          region:'منطقة الرياض',     reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N23':{ name:'فرع السويدي 2',     city:'الرياض',          region:'منطقة الرياض',     reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N24':{ name:'فرع نجران',         city:'نجران',           region:'منطقة نجران',      reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N25':{ name:'فرع خاسم ألان',     city:'الرياض',          region:'منطقة الرياض',     reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N26':{ name:'فرع مكة 2',         city:'مكة المكرمة',     region:'منطقة مكة',        reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N27':{ name:'فرع قصر الحكم',     city:'الرياض',          region:'منطقة الرياض',     reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N28':{ name:'فرع جدة مارينا',    city:'جدة',             region:'منطقة مكة',        reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N29':{ name:'فرع محطة النسيم',   city:'الرياض',          region:'منطقة الرياض',     reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N30':{ name:'فرع محطة البيضاء',  city:'الرياض',          region:'منطقة الرياض',     reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N31':{ name:'فرع سليمان الحبيب', city:'الرياض',          region:'منطقة الرياض',     reviewUrl:'', pagerUrl:'https://bajri.app' },
+  'N32':{ name:'فرع العليا',        city:'الرياض',          region:'منطقة الرياض',     reviewUrl:'', pagerUrl:'https://bajri.app' },
+};
+
+/* ═══════════════════════════════════════════════════════
+   الهيكل الإداري — إقليم ← منطقة ← فرع
+   تجميع مبدئي، يُعدَّل من لوحة الإدارة الكاملة (namaq-admin.html)
+═══════════════════════════════════════════════════════ */
+const REGION_GROUPS = {
+  'إقليم الوسط':    ['منطقة الرياض','منطقة القصيم','منطقة حائل','منطقة الجوف','منطقة نجران'],
+  'إقليم الشرقية':  ['المنطقة الشرقية'],
+  'إقليم الغربية':  ['منطقة مكة','منطقة المدينة','منطقة تبوك','منطقة جازان','منطقة عسير'],
+};
+
+function getRegionGroup(areaName){
+  for(const [group, areas] of Object.entries(REGION_GROUPS)){
+    if(areas.includes(areaName)) return group;
+  }
+  return 'غير محدد';
+}
+
+const INITIAL_PRODUCTS = {
+  drinks:[
+    { id:'d1', name:'V60',                 nameEn:'Pour Over',         price:18, calories:5,   category:'drinks', emoji:'☕', desc:'قهوة مصفاة يدوياً بأسلوب V60 الياباني، تبرز نكهات الفاكهة والزهور في كل كوب.', allergens:[], options:[{label:'نوع القهوة',items:['إثيوبي','كولومبي','برازيلي']}] },
+    { id:'d2', name:'فلات وايت',           nameEn:'Flat White',        price:16, calories:120, category:'drinks', emoji:'🥛', desc:'إسبريسو مزدوج مع حليب مبخر ناعم، توازن مثالي بين القهوة والحليب.', allergens:['منتجات ألبان'], options:[] },
+    { id:'d3', name:'سبانيش لاتيه بارد',  nameEn:'Iced Spanish Latte',price:20, calories:210, category:'drinks', emoji:'🧊', desc:'إسبريسو مركّز مع حليب مكثف وثلج، حلو وقوي بنفس الوقت.', allergens:['منتجات ألبان'], options:[] },
+    { id:'d4', name:'آيس دريب',            nameEn:'Iced Drip Coffee',  price:18, calories:10,  category:'drinks', emoji:'💧', desc:'قهوة تنقيط بارد تُحضَّر لساعات طويلة للحصول على نكهة ناعمة وعميقة.', allergens:[], options:[{label:'الإضافات',items:['موهيتو','مشروب طاقة']}] },
+  ],
+  sweets:[
+    { id:'s1', name:'كيكة نمق الشهيرة',   nameEn:'Namaq Signature Cake',  price:24, calories:380, category:'sweets', emoji:'🎂', desc:'كيكة إسفنجية فاخرة بطبقات الكريمة والكراميل، وصفة نمق الحصرية.', allergens:['جلوتين','منتجات ألبان','بيض'], options:[] },
+    { id:'s2', name:'تيراميسو الياباني',  nameEn:'Japanese Tiramisu',     price:22, calories:320, category:'sweets', emoji:'🍮', desc:'تيراميسو بلمسة يابانية خفيفة، طبقات من الإسبريسو والكريمة الحريرية.', allergens:['جلوتين','منتجات ألبان','بيض'], options:[] },
+    { id:'s3', name:'كرواسان فريش',       nameEn:'Fresh Croissant',       price:12, calories:240, category:'sweets', emoji:'🥐', desc:'كرواسان فرنسي طازج يُخبز يومياً، هش من الخارج طري من الداخل.', allergens:['جلوتين','منتجات ألبان','بيض'], options:[] },
+    { id:'s4', name:'نمق بايتس',          nameEn:'Namaq Bites',           price:15, calories:180, category:'sweets', emoji:'🍫', desc:'قطع شوكولاتة صغيرة بحشوات متنوعة، المرافق المثالي لكوب قهوتك.', allergens:['منتجات ألبان','مكسرات'], options:[] },
+  ]
+};
+
+const ALLERGEN_ICONS = {'جلوتين':'🌾','منتجات ألبان':'🥛','بيض':'🥚','مكسرات':'🥜','سمسم':'🌿','صويا':'🫘'};
+const CAT_LABELS     = { drinks:'☕ مشروبات', sweets:'🍰 حلويات' };
+const STAR_LABELS    = ['','تجربة سيئة 😞','دون المستوى 😕','مقبولة 😐','جيدة جداً 😊','ممتازة! 🤩'];
+
+/* ══ STATE ══ */
+let activeBranchKey, activeBranch, delMode=false, imgMode=false, targetCardId=null, uploadedImg=null, qrCode=null;
+
+/* ══ BRANCH ══ */
+async function initBranch(){
+  const raw   = new URLSearchParams(window.location.search).get('branch')||'';
+  const code  = decodeURIComponent(raw).toUpperCase().trim();
+  activeBranchKey = BRANCH_MAPPING[code] ? code : Object.keys(BRANCH_MAPPING)[0];
+
+  // Load saved branch settings (Maps/Pager URLs) — local only
+  const saved = JSON.parse(localStorage.getItem('namaq_branches')||'{}');
+  Object.entries(BRANCH_MAPPING).forEach(([k,v])=>{
+    if(saved[k]){ Object.assign(v, saved[k]); }
+  });
+
+  activeBranch = BRANCH_MAPPING[activeBranchKey];
+
+  // Populate select
+  const sel = document.getElementById('branch-select');
+  sel.innerHTML='';
+  Object.entries(BRANCH_MAPPING).forEach(([k,b])=>{
+    const o = document.createElement('option');
+    o.value=k; o.textContent=`${b.name} · ${b.city}`;
+    if(k===activeBranchKey) o.selected=true;
+    sel.appendChild(o);
+  });
+
+  updateBranchUI();
+
+  // Show loading state
+  ['drinks','sweets'].forEach(cat=>{
+    const grid=document.getElementById(`${cat}-grid`);
+    if(grid) grid.innerHTML='<div style="text-align:center;padding:30px;color:var(--muted);font-size:13px">⏳ جاري التحميل...</div>';
+  });
+
+  // Load this branch's products from Firestore (persists forever, per-branch)
+  await loadSharedProducts();
+
+  // تحميل منتجات هذا الفرع الخاصة (إن وُجدت)
+  await loadBranchProducts();
+}
+
+/* ══ FIRESTORE — قائمة منتجات موحّدة لكل الفروع ══
+   كل الفروع تشترك في نفس قائمة المنتجات والأسعار.
+   أي مدير فرع يضيف/يحذف منتج → ينعكس فوراً على جميع الفروع.
+══════════════════════════════════════════════ */
+async function loadSharedProducts(){
+  try{
+    if(!window._firebaseReady){
+      await new Promise(res=>{
+        if(window._firebaseReady) return res();
+        document.addEventListener('firebase-ready', res, { once:true });
+        setTimeout(res, 3000); // fallback timeout
+      });
+    }
+    if(!window._fbDb) throw new Error('Firebase not ready');
+
+    const ref  = window._fbDoc(window._fbDb, 'products', 'shared');
+    const snap = await window._fbGet(ref);
+
+    if(snap.exists()){
+      const data = snap.data();
+      products = { drinks: data.drinks||[], sweets: data.sweets||[] };
+    } else {
+      // أول مرة يُفتح الموقع — نزرع القائمة الافتراضية ونحفظها كقائمة موحدة
+      products = { drinks:[...INITIAL_PRODUCTS.drinks], sweets:[...INITIAL_PRODUCTS.sweets] };
+      await window._fbSet(ref, products);
+    }
+  } catch(e){
+    console.warn('Firestore unavailable, using local defaults:', e);
+    products = { drinks:[...INITIAL_PRODUCTS.drinks], sweets:[...INITIAL_PRODUCTS.sweets] };
+  }
+  renderProducts();
+}
+
+async function saveSharedProducts(){
+  try{
+    if(!window._fbDb) return;
+    const ref = window._fbDoc(window._fbDb, 'products', 'shared');
+    await window._fbSet(ref, products);
+  } catch(e){
+    console.warn('Could not save to Firestore:', e);
+    showToast('⚠️ لم يتم الحفظ الدائم — تحقق من الاتصال');
+  }
+}
+
+/* ══ منتجات الفرع الخاصة — تظهر فقط لعملاء هذا الفرع (مثل فروع المترو) ══ */
+let branchProducts = [];
+
+async function loadBranchProducts(){
+  branchProducts = [];
+  try{
+    if(!window._fbDb) return renderBranchProducts();
+    const ref  = window._fbDoc(window._fbDb,'branch_products',activeBranchKey);
+    const snap = await window._fbGet(ref);
+    if(snap.exists()) branchProducts = snap.data().items || [];
+  } catch(e){ console.warn('Could not load branch products:', e); }
+  renderBranchProducts();
+}
+
+async function saveBranchProducts(){
+  try{
+    if(!window._fbDb) return;
+    const ref = window._fbDoc(window._fbDb,'branch_products',activeBranchKey);
+    await window._fbSet(ref, { items: branchProducts });
+  } catch(e){
+    console.warn('Could not save branch products:', e);
+    showToast('⚠️ لم يتم الحفظ الدائم');
+  }
+}
+
+function renderBranchProducts(){
+  const wrap = document.getElementById('branch-products-wrap');
+  const grid = document.getElementById('branch-products-grid');
+  if(!branchProducts.length){ wrap.style.display='none'; return; }
+  wrap.style.display='block';
+  document.getElementById('branch-products-title').textContent = `منتجات ${activeBranch.name}`;
+  grid.innerHTML='';
+  branchProducts.forEach((p,i)=>{
+    const card = createCard(p);
+    card.style.animationDelay=`${i*0.07}s`;
+    grid.appendChild(card);
+  });
+}
+
+function addBranchProduct(){
+  const name   = document.getElementById('bp-name').value.trim();
+  const price  = parseInt(document.getElementById('bp-price').value);
+  const cal    = parseInt(document.getElementById('bp-cal').value)||0;
+  const desc   = document.getElementById('bp-desc').value.trim();
+
+  if(!name){ showToast('⚠️ أدخل اسم المنتج'); return; }
+  if(!price||price<=0){ showToast('⚠️ أدخل سعراً صحيحاً'); return; }
+
+  const p={ id:`bp-${activeBranchKey}-${++idCtr}`, name, price, calories:cal, desc,
+    category:'branch', allergens:[], options:[], imageUrl:null, emoji:'⭐' };
+
+  branchProducts.push(p);
+  renderBranchProducts();
+  saveBranchProducts();
+
+  ['bp-name','bp-price','bp-cal','bp-desc'].forEach(id=>document.getElementById(id).value='');
+  showToast(`✅ تم إضافة "${name}" لفرع ${activeBranch.name}`);
+}
+
+function deleteBranchProductCard(id){
+  branchProducts = branchProducts.filter(p=>p.id!==id);
+  const el=document.querySelector(`[data-id="${id}"]`);
+  if(el){ el.style.transition='all 0.3s ease'; el.style.opacity='0'; el.style.transform='scale(0.85)'; setTimeout(()=>el.remove(),300); }
+  saveBranchProducts();
+  renderBranchProducts();
+  showToast('🗑️ تم حذف المنتج');
+}
+
+function updateBranchUI(){
+  const b = activeBranch;
+  const lbl = document.getElementById('branch-label');
+  if(lbl) lbl.textContent=`${b.name} · ${b.city}`;
+  const mapsLink = document.getElementById('maps-link');
+  if(mapsLink) mapsLink.href = b.reviewUrl||'#';
+  const pagerFloat = document.getElementById('pager-float-btn');
+  const pagerUrl   = b.pagerUrl||'https://bajri.app';
+  if(pagerFloat) pagerFloat.href=pagerUrl;
+}
+
+function switchBranch(){
+  const code = document.getElementById('branch-select').value;
+  const base = window.location.href.split('?')[0];
+  window.location.href=`${base}?branch=${code}`;
+}
+
+/* ══ PRODUCTS ══ */
+let products = { drinks:[], sweets:[] }; // يُملأ من Firestore عبر loadSharedProducts()
+let idCtr=100;
+
+function createCard(p){
+  const card = document.createElement('div');
+  card.className='product-card';
+  card.dataset.id=p.id;
+  card.dataset.product=JSON.stringify(p);
+  card.style.animationDelay=`${Math.random()*0.3}s`;
+
+  const imgContent = p.imageUrl
+    ? `<img src="${p.imageUrl}" alt="${p.name}" loading="lazy">`
+    : `<div class="card-img-placeholder">${p.emoji||'☕'}</div>`;
+
+  card.innerHTML=`
+    <button class="del-badge" onclick="deleteCard('${p.id}')">×</button>
+    <div class="card-img-wrap" style="position:relative">
+      ${imgContent}
+      <button class="card-img-edit" onclick="triggerImgEdit('${p.id}',event)">📷</button>
+    </div>
+    <div class="card-body">
+      <div class="card-name">${p.name}</div>
+      ${p.nameEn?`<span class="card-name-en">${p.nameEn}</span>`:''}
+      <div class="card-meta">
+        <div class="card-price"><span class="price-num">${p.price}</span><span class="price-unit">ر.س</span></div>
+        ${p.calories?`<div class="card-cal">🔥 ${p.calories} سعرة</div>`:''}
+      </div>
+      ${p.allergens&&p.allergens.length?`<div class="card-allergens">${p.allergens.map(a=>`<span class="allergen-tag">${ALLERGEN_ICONS[a]||'⚠️'} ${a}</span>`).join('')}</div>`:''}
+      ${p.desc?`<div class="card-desc">${p.desc}</div>`:''}
+    </div>`;
+
+  card.addEventListener('click', e=>{
+    if(e.target.closest('.del-badge')||e.target.closest('.card-img-edit')) return;
+    openDetail(p.id);
+  });
+
+  return card;
+}
+
+function renderProducts(){
+  ['drinks','sweets'].forEach(cat=>{
+    const grid = document.getElementById(`${cat}-grid`);
+    grid.innerHTML='';
+    products[cat].forEach((p,i)=>{
+      const card=createCard(p);
+      card.style.animationDelay=`${i*0.07}s`;
+      grid.appendChild(card);
+    });
+  });
+}
+
+/* ══ ADD PRODUCT ══ */
+function handleNewImg(e){
+  const file=e.target.files[0];
+  if(!file) return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    uploadedImg=ev.target.result;
+    const prev=document.getElementById('new-img-preview');
+    const ph=document.getElementById('new-img-placeholder');
+    prev.src=uploadedImg; prev.style.display='block'; ph.style.display='none';
+  };
+  r.readAsDataURL(file);
+}
+
+/* ══ PARSE MULTI-LINE OPTION GROUPS ══
+   Input format (each line = one group):
+     نوع القهوة: إثيوبي، كولومبي، برازيلي
+     الإضافات: موهيتو، مشروب طاقة
+   Output: [{label:'نوع القهوة', items:['إثيوبي','كولومبي','برازيلي']}, ...]
+   Lines without ':' become an "عام" (general) group of comma-separated items.
+══════════════════════════════════════ */
+function parseOptionGroups(text){
+  if(!text) return [];
+  const lines = text.split('\n').map(l=>l.trim()).filter(Boolean);
+  const groups = [];
+  lines.forEach(line=>{
+    let label='عام', rest=line;
+    const sepIdx = line.indexOf(':')>=0 ? line.indexOf(':') : line.indexOf('：');
+    if(sepIdx>0){
+      label = line.slice(0,sepIdx).trim();
+      rest  = line.slice(sepIdx+1).trim();
+    }
+    const items = rest.split(/[,،]/).map(s=>s.trim()).filter(Boolean);
+    if(items.length) groups.push({ label, items });
+  });
+  return groups;
+}
+
+function addProduct(){
+  const name   = document.getElementById('new-name').value.trim();
+  const price  = parseInt(document.getElementById('new-price').value);
+  const cal    = parseInt(document.getElementById('new-cal').value)||0;
+  const cat    = document.getElementById('new-cat').value;
+  const desc   = document.getElementById('new-desc').value.trim();
+  const allStr = document.getElementById('new-allergens').value.trim();
+  const allergens = allStr ? allStr.split(',').map(s=>s.trim()).filter(Boolean) : [];
+  const optStr = document.getElementById('new-options').value.trim();
+  const options = parseOptionGroups(optStr);
+
+  if(!name){ showToast('⚠️ أدخل اسم المنتج'); return; }
+  if(!price||price<=0){ showToast('⚠️ أدخل سعراً صحيحاً'); return; }
+
+  const p={
+    id:`custom-${++idCtr}`, name, price, calories:cal, category:cat,
+    desc, allergens, options, imageUrl:uploadedImg||null,
+    emoji: cat==='drinks'?'☕':'🍰'
+  };
+
+  products[cat].push(p);
+  renderProducts();
+  saveSharedProducts();
+
+  // Reset
+  ['new-name','new-price','new-cal','new-desc','new-allergens','new-options'].forEach(id=>document.getElementById(id).value='');
+  uploadedImg=null;
+  document.getElementById('new-img-preview').style.display='none';
+  document.getElementById('new-img-placeholder').style.display='flex';
+
+  showToast(`✅ تم إضافة "${name}"`);
+}
+
+/* ══ DELETE ══ */
+function deleteCard(id){
+  // إذا المنتج من قائمة الفرع الخاصة، وجّه للدالة المناسبة
+  if(branchProducts.some(p=>p.id===id)){ deleteBranchProductCard(id); return; }
+  ['drinks','sweets'].forEach(cat=>{ products[cat]=products[cat].filter(p=>p.id!==id); });
+  const el=document.querySelector(`[data-id="${id}"]`);
+  if(el){ el.style.transition='all 0.3s ease'; el.style.opacity='0'; el.style.transform='scale(0.85)'; setTimeout(()=>el.remove(),300); }
+  saveSharedProducts();
+  showToast('🗑️ تم حذف المنتج');
+}
+
+function toggleDelMode(){
+  delMode=!delMode;
+  const btn=document.getElementById('del-toggle-btn');
+  document.querySelectorAll('.product-card').forEach(c=>c.classList.toggle('del-mode',delMode));
+  btn.textContent=delMode?'✅ إيقاف وضع الحذف':'تفعيل وضع الحذف';
+  btn.classList.toggle('active',delMode);
+  if(delMode) showToast('🔴 وضع الحذف مفعّل');
+  else showToast('✅ تم إيقاف وضع الحذف');
+}
+
+/* ══ EDIT CARD IMAGE ══ */
+function toggleImgMode(){
+  imgMode=!imgMode;
+  const btn=document.getElementById('img-toggle-btn');
+  document.querySelectorAll('.product-card').forEach(c=>c.classList.toggle('img-mode',imgMode));
+  btn.textContent=imgMode?'✅ إيقاف وضع الصور':'تفعيل وضع تعديل الصور';
+  if(imgMode) showToast('📷 اضغط أيقونة الكاميرا على أي منتج');
+}
+function triggerImgEdit(id,e){
+  e.stopPropagation();
+  targetCardId=id;
+  document.getElementById('card-img-input').click();
+}
+function applyCardImg(e){
+  const file=e.target.files[0]; if(!file||!targetCardId) return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    const card=document.querySelector(`[data-id="${targetCardId}"]`);
+    if(!card) return;
+    const wrap=card.querySelector('.card-img-wrap');
+    const oldImg=wrap.querySelector('img');
+    const oldPh=wrap.querySelector('.card-img-placeholder');
+    if(oldImg){ oldImg.src=ev.target.result; }
+    else if(oldPh){
+      const img=document.createElement('img'); img.src=ev.target.result;
+      img.alt='منتج'; img.loading='lazy'; oldPh.replaceWith(img);
+    }
+    // Update underlying data model + persist
+    let foundInBranch=false;
+    const bp = branchProducts.find(x=>x.id===targetCardId);
+    if(bp){ bp.imageUrl=ev.target.result; card.dataset.product=JSON.stringify(bp); foundInBranch=true; }
+
+    if(!foundInBranch){
+      ['drinks','sweets'].forEach(cat=>{
+        const p = products[cat].find(x=>x.id===targetCardId);
+        if(p){ p.imageUrl = ev.target.result; card.dataset.product = JSON.stringify(p); }
+      });
+      saveSharedProducts();
+    } else {
+      saveBranchProducts();
+    }
+    showToast('✅ تم تحديث الصورة');
+    document.getElementById('card-img-input').value='';
+    targetCardId=null;
+  };
+  r.readAsDataURL(file);
+}
+
+/* ══ LOGO ══ */
+function handleLogoUpload(e){
+  const file=e.target.files[0]; if(!file) return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    const img=document.querySelector('.logo-inner img');
+    const fallback=document.querySelector('.logo-fallback');
+    if(img){ img.src=ev.target.result; img.style.display='block'; if(fallback) fallback.style.display='none'; }
+    try{ localStorage.setItem('namaq_logo',ev.target.result); } catch(err){}
+    showToast('✅ تم تحديث الشعار');
+  };
+  r.readAsDataURL(file);
+}
+
+/* ══ RATING ══ */
+let quickStar=0;
+
+function handleStar(val){
+  quickStar=val;
+  document.querySelectorAll('.qstar').forEach((s,i)=>s.classList.toggle('lit',i<val));
+  document.getElementById('quick-label').textContent=STAR_LABELS[val];
+  setTimeout(()=>{
+    document.getElementById('step-quick').style.display='none';
+    if(val>=4){
+      // Positive: redirect to Maps
+      const mapsUrl=activeBranch.reviewUrl||'https://maps.google.com';
+      document.getElementById('maps-link').href=mapsUrl;
+      document.getElementById('step-pos').style.display='block';
+      setTimeout(()=>{ if(mapsUrl!=='#') window.open(mapsUrl,'_blank'); },1500);
+    } else {
+      // Negative: internal complaint
+      document.getElementById('step-neg').style.display='block';
+      document.getElementById('complaint-form').style.display='block';
+    }
+  },400);
+}
+
+async function submitComplaint(){
+  const invoice=document.getElementById('c-invoice').value.trim();
+  const comment=document.getElementById('c-comment').value.trim();
+  if(!comment){ showToast('⚠️ يرجى كتابة ملاحظتك'); return; }
+
+  const now=new Date();
+  const area = activeBranch.region || '';
+  const regionGroup = getRegionGroup(area);
+
+  const review = {
+    invoice, comment, quickStar,
+    branch:activeBranch.name, branchKey:activeBranchKey,
+    area, regionGroup,
+    isComplaint:true,
+    dateStr:now.toLocaleDateString('ar-SA',{weekday:'long',year:'numeric',month:'long',day:'numeric'}),
+    timeStr:now.toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'}),
+    createdAtClient:now.toISOString()
+  };
+
+  try{
+    if(window._fbDb){
+      await window._fbAdd(window._fbCol(window._fbDb,'reviews'), { ...review, createdAt:window._fbServerTime() });
+    } else {
+      throw new Error('no-db');
+    }
+  } catch(e){
+    // نسخة احتياطية محلية إذا تعذّر الاتصال
+    const local=JSON.parse(localStorage.getItem(`namaq_reviews_${activeBranchKey}`)||'[]');
+    local.push({ id:Date.now(), ...review });
+    localStorage.setItem(`namaq_reviews_${activeBranchKey}`,JSON.stringify(local));
+  }
+
+  ['step-neg','complaint-form'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('rating-success').style.display='block';
+  showToast('✅ شكراً — تم إرسال ملاحظتك للإدارة');
+}
+
+/* ══ ADMIN ══ */
+let adminUnlocked=false;
+let isSuperAdmin=false;
+
+function toggleAdminGate(){
+  const box=document.getElementById('admin-pass-box');
+  if(adminUnlocked){ document.getElementById('admin-panel').classList.toggle('open'); return; }
+  box.classList.toggle('open');
+  if(box.classList.contains('open')) setTimeout(()=>document.getElementById('admin-pass-input').focus(),100);
+}
+function checkAdminPass(){
+  const val=document.getElementById('admin-pass-input').value;
+  const err=document.getElementById('admin-pass-error');
+
+  if(val===ADMIN_PASSWORD){
+    adminUnlocked=true; isSuperAdmin=true;
+  } else if(val===BRANCH_MGR_PASSWORD){
+    adminUnlocked=true; isSuperAdmin=false;
+  } else {
+    err.style.display='block';
+    document.getElementById('admin-pass-input').value='';
+    return;
+  }
+
+  document.getElementById('admin-pass-box').classList.remove('open');
+  document.getElementById('admin-pass-input').value='';
+  err.style.display='none';
+  openAdminPanel();
+}
+function openAdminPanel(){
+  const panel=document.getElementById('admin-panel');
+  panel.classList.add('open');
+  document.getElementById('admin-branch-name').textContent=activeBranch.name;
+  document.getElementById('admin-branch-code').textContent=`?branch=${activeBranchKey}`;
+  document.getElementById('branch-url-input').value=activeBranch.reviewUrl||'';
+  document.getElementById('pager-url-input').value=activeBranch.pagerUrl||'https://bajri.app';
+
+  // إظهار/إخفاء أقسام المدير العام فقط
+  const superOnlyIds = ['super-only-add','super-only-delete','super-only-img','super-only-logo'];
+  superOnlyIds.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.style.display = isSuperAdmin ? 'block' : 'none';
+  });
+
+  const roleBadge=document.getElementById('role-badge');
+  if(roleBadge) roleBadge.textContent = isSuperAdmin ? '⭐ مدير عام' : '📍 مدير فرع';
+
+  renderComplaints();
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+async function renderComplaints(){
+  const list=document.getElementById('complaints-list');
+  list.innerHTML='<div class="complaints-empty">⏳ جاري التحميل...</div>';
+
+  let reviews=[];
+  try{
+    if(window._fbDb){
+      const q = window._fbQuery(
+        window._fbCol(window._fbDb,'reviews'),
+        window._fbWhere('branchKey','==',activeBranchKey)
+      );
+      const snap = await window._fbGetDocs(q);
+      reviews = snap.docs.map(d=>({ id:d.id, ...d.data() }));
+    }
+  } catch(e){ console.warn('Could not load complaints:', e); }
+
+  // دمج أي شكاوى محلية احتياطية (لو فشل الاتصال سابقاً)
+  const local=JSON.parse(localStorage.getItem(`namaq_reviews_${activeBranchKey}`)||'[]');
+  reviews = reviews.concat(local);
+
+  document.getElementById('complaints-count').textContent=reviews.length;
+  if(!reviews.length){
+    list.innerHTML='<div class="complaints-empty">📭 لا توجد شكاوى لهذا الفرع</div>';
+    return;
+  }
+  const sorted=[...reviews].sort((a,b)=> (b.createdAtClient||'').localeCompare(a.createdAtClient||''));
+  list.innerHTML=sorted.map(r=>{
+    const stars='★'.repeat(r.quickStar||0)+'☆'.repeat(5-(r.quickStar||0));
+    return `
+      <div class="complaint-card">
+        <div class="complaint-card-head">
+          <div class="complaint-stars">${stars}</div>
+          <button class="complaint-del" onclick="deleteComplaint('${r.id}')">🗑</button>
+        </div>
+        ${r.invoice?`<div class="complaint-meta">فاتورة #${r.invoice}</div>`:''}
+        <div class="complaint-text">${r.comment}</div>
+        <div class="complaint-meta" style="margin-top:4px">${r.dateStr||''} · ${r.timeStr||''}</div>
+      </div>`;
+  }).join('');
+}
+
+async function deleteComplaint(id){
+  try{
+    if(window._fbDb) await window._fbDelete(window._fbDoc(window._fbDb,'reviews',id));
+  } catch(e){ console.warn('Could not delete from Firestore:', e); }
+  // حذف من النسخة المحلية الاحتياطية أيضاً إن وُجدت
+  let local=JSON.parse(localStorage.getItem(`namaq_reviews_${activeBranchKey}`)||'[]');
+  local=local.filter(r=>String(r.id)!==String(id));
+  localStorage.setItem(`namaq_reviews_${activeBranchKey}`,JSON.stringify(local));
+  renderComplaints();
+  showToast('تم حذف الشكوى');
+}
+function adminLogout(){
+  adminUnlocked=false;
+  isSuperAdmin=false;
+  document.getElementById('admin-panel').classList.remove('open');
+  showToast('تم تسجيل الخروج');
+}
+function saveBranchUrl(){
+  const url=document.getElementById('branch-url-input').value.trim();
+  if(url&&!url.startsWith('http')){ showToast('⚠️ رابط غير صحيح'); return; }
+  activeBranch.reviewUrl=url;
+  saveLocalBranch(); updateBranchUI();
+  showToast('✅ تم حفظ رابط Maps');
+}
+function savePagerUrl(){
+  const url=document.getElementById('pager-url-input').value.trim()||'https://bajri.app';
+  activeBranch.pagerUrl=url;
+  saveLocalBranch(); updateBranchUI();
+  showToast('✅ تم حفظ رابط البيجر');
+}
+function saveLocalBranch(){
+  const saved=JSON.parse(localStorage.getItem('namaq_branches')||'{}');
+  saved[activeBranchKey]={ reviewUrl:activeBranch.reviewUrl, pagerUrl:activeBranch.pagerUrl };
+  localStorage.setItem('namaq_branches',JSON.stringify(saved));
+}
+
+/* ══ QR ══ */
+let currentQRKey=null;
+function showQR(){
+  const key=activeBranchKey;
+  currentQRKey=key;
+  const b=BRANCH_MAPPING[key];
+  const base=window.location.href.split('?')[0];
+  const url=`${base}?branch=${key}`;
+  document.getElementById('qr-title').textContent=b.name;
+  document.getElementById('qr-city').textContent=`${b.city} · ${b.region}`;
+  document.getElementById('qr-url').textContent=url;
+  const wrap=document.getElementById('qr-canvas-wrap');
+  wrap.innerHTML='<div id="qr-gen"></div>';
+  document.getElementById('qr-overlay').classList.add('open');
+  setTimeout(()=>{
+    try{
+      new QRCode(document.getElementById('qr-gen'),{
+        text:url,width:200,height:200,colorDark:'#2e3d2e',colorLight:'#fdfaf5',
+        correctLevel:QRCode.CorrectLevel.H
+      });
+    }catch(e){ document.getElementById('qr-gen').textContent=url; }
+  },100);
+}
+function closeQR(){ document.getElementById('qr-overlay').classList.remove('open'); }
+function downloadQR(){
+  const key=currentQRKey;
+  const b=BRANCH_MAPPING[key]||{};
+  const canvas=document.querySelector('#qr-gen canvas');
+  const img=document.querySelector('#qr-gen img');
+  const src=canvas?canvas.toDataURL('image/png'):(img?img.src:null);
+  if(!src){ showToast('⚠️ انتظر ثانية ثم حاول'); return; }
+  const out=document.createElement('canvas');
+  out.width=260; out.height=310;
+  const ctx=out.getContext('2d');
+  ctx.fillStyle='#fdfaf5'; ctx.fillRect(0,0,260,310);
+  const qrEl=new Image(); qrEl.src=src;
+  qrEl.onload=()=>{
+    ctx.drawImage(qrEl,30,16,200,200);
+    ctx.fillStyle='#2e3d2e'; ctx.font='bold 15px sans-serif'; ctx.textAlign='center';
+    ctx.fillText(b.name||key,130,240);
+    ctx.fillStyle='#b8965a'; ctx.font='12px sans-serif'; ctx.fillText(b.city||'',130,260);
+    ctx.fillStyle='#4a5d4a'; ctx.font='bold 13px monospace'; ctx.fillText(key,130,285);
+    const a=document.createElement('a'); a.download=`QR-namaq-${key}.png`;
+    a.href=out.toDataURL('image/png'); a.click();
+    showToast(`✅ تم تحميل QR — ${key}`);
+  };
+}
+
+/* ══ DETAIL MODAL ══ */
+function openDetail(id){
+  const card=document.querySelector(`[data-id="${id}"]`);
+  if(!card) return;
+  let p; try{ p=JSON.parse(card.dataset.product||'{}'); }catch(e){ return; }
+  const img=card.querySelector('.card-img-wrap img');
+  const wrap=document.getElementById('detail-hero-wrap');
+  wrap.innerHTML=img&&img.src
+    ?`<img src="${img.src}" class="detail-hero" alt="${p.name}">`
+    :`<div class="detail-hero-placeholder">${p.emoji||'☕'}</div>`;
+  document.getElementById('d-cat').textContent=CAT_LABELS[p.category]||'🍽️ منتج';
+  document.getElementById('d-name').textContent=p.name||'';
+  document.getElementById('d-name-en').textContent=p.nameEn||'';
+  document.getElementById('d-price').textContent=p.price||'';
+  const calEl=document.getElementById('d-cal');
+  const calNum=document.getElementById('d-cal-num');
+  if(p.calories){ calNum.textContent=p.calories; calEl.style.display='flex'; }
+  else calEl.style.display='none';
+  const descSec=document.getElementById('d-desc-sec');
+  if(p.desc){ document.getElementById('d-desc').textContent=p.desc; descSec.style.display='block'; }
+  else descSec.style.display='none';
+  const optSec=document.getElementById('d-options-sec');
+  if(p.options&&p.options.length){
+    document.getElementById('d-options').innerHTML=p.options.map(g=>`
+      <div class="option-group">
+        <div class="option-group-label">${g.label}</div>
+        <div class="option-group-items">${g.items.map(o=>`<span class="option-tag">☕ ${o}</span>`).join('')}</div>
+      </div>`).join('');
+    optSec.style.display='block';
+  } else optSec.style.display='none';
+  const allergySec=document.getElementById('d-allergy-sec');
+  if(p.allergens&&p.allergens.length){
+    document.getElementById('d-allergens').innerHTML=p.allergens.map(a=>`<span class="detail-allergen">${ALLERGEN_ICONS[a]||'⚠️'} ${a}</span>`).join('');
+    allergySec.style.display='block';
+  } else allergySec.style.display='none';
+  document.getElementById('detail-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeDetail(){
+  document.getElementById('detail-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+/* ══ TOAST ══ */
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+/* ══ INIT ══ */
+document.addEventListener('DOMContentLoaded', async ()=>{
+  await initBranch(); // يحمّل منتجات الفرع من Firestore ويعرضها
+  // Restore logo
+  try{
+    const savedLogo=localStorage.getItem('namaq_logo');
+    if(savedLogo){ const img=document.querySelector('.logo-inner img'); if(img){ img.src=savedLogo; img.style.display='block'; const fb=document.querySelector('.logo-fallback'); if(fb) fb.style.display='none'; } }
+  }catch(e){}
+});
+</script>
+</body>
+</html>
