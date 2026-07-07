@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>نمق — لوحة الإدارة الشاملة</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --black:#0f0e0c;--dark:#1a1714;--forest:#4a5d4a;--forest-dark:#2e3d2e;--forest-light:#6b7d6b;
+  --gold:#b8965a;--gold2:#d4b07a;--gold3:#f0e4cc;--beige:#f2ede4;--beige2:#e8e0d0;--cream:#faf7f2;
+  --text:#1a1714;--muted:#7a6e5f;--red:#c0392b;--blue:#1a73e8;--r:14px;
+  --t:all 0.3s cubic-bezier(0.4,0,0.2,1);color-scheme:light;
+}
+body{font-family:'Noto Naskh Arabic',serif;background:var(--cream);color:var(--text);min-height:100vh}
+
+/* ── LOGIN SCREEN ── */
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;
+  background:linear-gradient(160deg,var(--black) 0%,var(--dark) 60%,#221e16 100%)}
+.login-card{background:var(--cream);border-radius:24px;padding:36px 28px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.login-logo{text-align:center;margin-bottom:24px}
+.login-brand{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:500;color:var(--forest-dark);letter-spacing:5px}
+.login-sub{font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;color:var(--gold);letter-spacing:2px;margin-top:4px}
+.login-title{font-size:16px;font-weight:700;color:var(--forest-dark);margin-bottom:20px;text-align:center}
+.field-group{margin-bottom:14px}
+.field-label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.field-input{width:100%;padding:12px 16px;border:1.5px solid var(--beige2);border-radius:10px;background:var(--beige);
+  font-family:'Noto Naskh Arabic',serif;font-size:14px;color:var(--text);outline:none;transition:var(--t)}
+.field-input:focus{border-color:var(--forest-light);background:#fff;box-shadow:0 0 0 3px rgba(74,93,74,0.08)}
+.field-input[type="password"]{direction:ltr;letter-spacing:2px}
+.login-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--forest) 0%,var(--forest-dark) 100%);color:#fff;
+  border:none;border-radius:10px;font-family:'Noto Naskh Arabic',serif;font-size:15px;font-weight:700;cursor:pointer;
+  box-shadow:0 4px 16px rgba(74,93,74,0.3);transition:var(--t);margin-top:4px}
+.login-btn:hover{transform:translateY(-1px)}
+.login-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.login-error{display:none;background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.2);border-radius:8px;
+  padding:10px 14px;font-size:13px;color:var(--red);text-align:center;margin-top:12px}
+
+/* ── DASHBOARD ── */
+.dashboard{display:none}
+.dashboard.visible{display:block}
+.top-bar{background:linear-gradient(135deg,var(--forest-dark) 0%,var(--forest) 100%);padding:16px 20px;
+  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 16px rgba(46,61,46,0.3)}
+.top-bar-brand{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:#fff;letter-spacing:3px}
+.top-bar-role{font-family:'Cormorant Garamond',serif;font-size:11px;font-style:italic;color:var(--gold2);letter-spacing:1px;margin-top:2px}
+.top-logout-btn{padding:8px 16px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);
+  border-radius:20px;color:#fff;font-family:'Noto Naskh Arabic',serif;font-size:12px;cursor:pointer;transition:var(--t)}
+.top-logout-btn:hover{background:rgba(255,255,255,0.2)}
+
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;padding:18px 16px 0}
+.stat-card{background:var(--beige);border-radius:14px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(74,93,74,0.08)}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--forest);line-height:1}
+.stat-label{font-size:11px;color:var(--muted);margin-top:4px;font-weight:600}
+.stat-card.alert .stat-num{color:var(--red)}
+
+.tabs{display:flex;gap:4px;padding:14px 16px 0;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{padding:9px 16px;border:none;border-radius:20px;font-family:'Noto Naskh Arabic',serif;font-size:13px;
+  font-weight:600;cursor:pointer;white-space:nowrap;background:var(--beige);color:var(--muted);transition:var(--t)}
+.tab-btn.active{background:linear-gradient(135deg,var(--forest) 0%,var(--forest-dark) 100%);color:#fff;
+  box-shadow:0 3px 10px rgba(74,93,74,0.3)}
+.tab-content{display:none;padding:16px}
+.tab-content.active{display:block}
+
+.section-title{font-size:15px;font-weight:700;color:var(--forest-dark);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.panel{background:var(--beige);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(74,93,74,0.08)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}
+@media(max-width:480px){.form-grid{grid-template-columns:1fr}}
+.btn-primary{padding:11px 20px;background:linear-gradient(135deg,var(--forest) 0%,var(--forest-dark) 100%);color:#fff;
+  border:none;border-radius:10px;font-family:'Noto Naskh Arabic',serif;font-size:13px;font-weight:700;cursor:pointer;
+  transition:var(--t);box-shadow:0 3px 10px rgba(74,93,74,0.25);width:100%}
+.btn-primary:hover{transform:translateY(-1px)}
+.btn-danger{padding:7px 12px;background:transparent;border:1.5px solid rgba(192,57,43,0.3);border-radius:8px;
+  color:var(--red);font-family:'Noto Naskh Arabic',serif;font-size:12px;cursor:pointer;transition:var(--t)}
+.btn-danger:hover{background:rgba(192,57,43,0.06);border-color:var(--red)}
+
+.filter-bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.filter-select{flex:1;min-width:110px;padding:9px 12px;border:1.5px solid var(--beige2);border-radius:10px;
+  background:var(--cream);font-family:'Noto Naskh Arabic',serif;font-size:12px;color:var(--text);outline:none;cursor:pointer}
+
+.complaint-card{background:var(--cream);border-radius:12px;border:1px solid var(--beige2);margin-bottom:9px;overflow:hidden}
+.complaint-card.is-complaint{border-right:3px solid var(--red)}
+.complaint-head{padding:10px 13px;background:rgba(255,255,255,0.5);border-bottom:1px solid var(--beige2);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:5px}
+.complaint-body{padding:11px 13px}
+.complaint-stars{font-size:13px;color:#e9a825;direction:ltr}
+.complaint-meta{font-size:10px;color:var(--muted);font-family:'Cormorant Garamond',serif;font-style:italic}
+.complaint-text{font-size:13px;color:var(--text);line-height:1.6}
+.complaint-badge{display:inline-flex;background:rgba(192,57,43,0.1);color:var(--red);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px}
+.complaint-badge.ok{background:rgba(74,93,74,0.1);color:var(--forest-dark)}
+
+.org-table{width:100%;border-collapse:collapse;font-size:13px}
+.org-table th{padding:9px 10px;text-align:right;font-weight:700;color:var(--forest-dark);border-bottom:1.5px solid var(--beige2);font-size:11px}
+.org-table td{padding:9px 10px;border-bottom:1px solid var(--beige2)}
+.role-badge{display:inline-block;padding:3px 9px;border-radius:10px;font-size:10px;font-weight:700}
+.role-owner{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--forest-dark)}
+.role-ops_manager{background:rgba(26,115,232,0.12);color:var(--blue)}
+.role-regional_manager{background:rgba(74,93,74,0.15);color:var(--forest-dark)}
+.role-area_manager{background:rgba(74,93,74,0.1);color:var(--forest)}
+.role-branch_manager{background:var(--beige2);color:var(--muted)}
+
+.empty-state{text-align:center;padding:24px;color:var(--muted);opacity:.6;font-size:13px}
+.loading{text-align:center;padding:18px;color:var(--muted);font-size:13px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--forest-dark);
+  color:#fff;padding:11px 22px;border-radius:30px;font-size:13px;font-weight:600;box-shadow:0 6px 24px rgba(0,0,0,0.2);
+  z-index:999;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.note-box{background:rgba(184,150,90,0.08);border:1px solid rgba(184,150,90,0.2);border-radius:8px;padding:10px 12px;
+  font-size:11px;color:#8a6a30;margin-bottom:12px;line-height:1.6}
+.note-box a{color:var(--forest)}
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <span class="login-brand">نمق</span>
+      <div class="login-sub">Management Dashboard · لوحة الإدارة الشاملة</div>
+    </div>
+    <div class="login-title">تسجيل الدخول</div>
+    <div class="field-group">
+      <label class="field-label">📧 البريد الإلكتروني</label>
+      <input type="email" class="field-input" id="login-email" placeholder="owner@namaq.com" style="direction:ltr">
+    </div>
+    <div class="field-group">
+      <label class="field-label">🔑 كلمة المرور</label>
+      <input type="password" class="field-input" id="login-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" id="login-btn" onclick="doLogin()">دخول</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD ===== -->
+<div class="dashboard" id="dashboard">
+  <div class="top-bar">
+    <div>
+      <div class="top-bar-brand">نمق</div>
+      <div class="top-bar-role" id="top-role-label">لوحة الإدارة</div>
+    </div>
+    <button class="top-logout-btn" onclick="doLogout()">خروج 🔓</button>
+  </div>
+
+  <div class="stats-row" id="stats-row">
+    <div class="stat-card"><div class="stat-num" id="stat-total">—</div><div class="stat-label">إجمالي التقييمات</div></div>
+    <div class="stat-card alert"><div class="stat-num" id="stat-complaints">—</div><div class="stat-label">شكاوى</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-avg">—</div><div class="stat-label">المعدل العام</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-scope">—</div><div class="stat-label">نطاق صلاحيتك</div></div>
+  </div>
+
+  <div class="tabs" id="tabs-bar">
+    <button class="tab-btn active" onclick="switchTab('complaints')">📬 الشكاوى</button>
+    <button class="tab-btn" id="tab-org-btn" onclick="switchTab('org')" style="display:none">🗺️ الهيكل التنظيمي</button>
+    <button class="tab-btn" id="tab-users-btn" onclick="switchTab('users')" style="display:none">👥 المستخدمون</button>
+  </div>
+
+  <!-- TAB: COMPLAINTS -->
+  <div class="tab-content active" id="tab-complaints">
+    <div class="filter-bar">
+      <select class="filter-select" id="filter-type" onchange="loadComplaints()">
+        <option value="">الكل</option>
+        <option value="complaint">شكاوى فقط</option>
+        <option value="positive">إيجابي فقط</option>
+      </select>
+    </div>
+    <div id="complaints-list"><div class="loading">⏳ جاري التحميل...</div></div>
+  </div>
+
+  <!-- TAB: ORG STRUCTURE (owner/ops only) -->
+  <div class="tab-content" id="tab-org">
+    <div class="panel">
+      <div class="section-title">🗺️ الإقليم ← المنطقة ← الفرع</div>
+      <div class="note-box">هذا الهيكل يحدد من يشوف شكاوى من. عدّله حسب تنظيمك الفعلي.</div>
+      <div id="org-tree"><div class="loading">⏳ جاري التحميل...</div></div>
+    </div>
+    <div class="panel">
+      <div class="section-title">➕ إضافة / نقل فرع لمنطقة</div>
+      <div class="form-grid">
+        <input type="text" class="field-input" id="org-branch-code" placeholder="كود الفرع (مثال: N02)">
+        <input type="text" class="field-input" id="org-area-name" placeholder="اسم المنطقة (مثال: منطقة الرياض)">
+      </div>
+      <button class="btn-primary" onclick="assignBranchToArea()">حفظ</button>
+    </div>
+  </div>
+
+  <!-- TAB: USERS (owner only) -->
+  <div class="tab-content" id="tab-users">
+    <div class="panel">
+      <div class="section-title">➕ إضافة مستخدم جديد</div>
+      <div class="note-box">
+        بعد الحفظ هنا، يجب إنشاء حساب Firebase Authentication بنفس البريد من
+        <a href="https://console.firebase.google.com/project/namaq-menu/authentication/users" target="_blank">هذا الرابط</a>.
+      </div>
+      <div class="form-grid">
+        <input type="text" class="field-input" id="nu-name" placeholder="الاسم الكامل">
+        <input type="email" class="field-input" id="nu-email" placeholder="user@namaq.com" style="direction:ltr">
+      </div>
+      <div class="form-grid">
+        <select class="field-input" id="nu-role" onchange="updateScopeHint()">
+          <option value="owner">👑 المالك</option>
+          <option value="ops_manager">🏢 مدير التشغيل</option>
+          <option value="regional_manager">🌍 مدير إقليمي</option>
+          <option value="area_manager">📍 مدير منطقة</option>
+          <option value="branch_manager">🏪 مدير فرع</option>
+        </select>
+        <input type="text" class="field-input" id="nu-scope" placeholder="النطاق (اسم الإقليم/المنطقة أو كود الفرع)">
+      </div>
+      <div id="scope-hint" style="font-size:11px;color:var(--muted);margin-bottom:10px"></div>
+      <button class="btn-primary" onclick="addUser()">إضافة المستخدم ✓</button>
+    </div>
+    <div class="panel">
+      <div class="section-title">👥 المستخدمون الحاليون</div>
+      <table class="org-table" id="users-table">
+        <thead><tr><th>الاسم</th><th>الدور</th><th>النطاق</th><th></th></tr></thead>
+        <tbody id="users-tbody"><tr><td colspan="4" class="empty-state">⏳ جاري التحميل...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ===== FIREBASE ===== -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, doc, getDoc, setDoc, getDocs, query, where, deleteDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyClW2jkvRKmVRfJY02nKCE3iHAs89BjwcM",
+  authDomain: "namaq-menu.firebaseapp.com",
+  projectId: "namaq-menu",
+  storageBucket: "namaq-menu.firebasestorage.app",
+  messagingSenderId: "98198330180",
+  appId: "1:98198330180:web:1ad07cc5786322046e1511"
+};
+
+const app  = initializeApp(firebaseConfig);
+const db   = getFirestore(app);
+const auth = getAuth(app);
+
+window._db   = db;
+window._auth = auth;
+window._fb   = { collection, doc, getDoc, setDoc, getDocs, query, where, deleteDoc, serverTimestamp, signInWithEmailAndPassword, signOut };
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const snap = await getDoc(doc(db, 'users', user.uid));
+    if (snap.exists()) {
+      window._currentUser = { uid: user.uid, ...snap.data() };
+      window.showDashboard(window._currentUser);
+    } else {
+      await signOut(auth);
+      window.showLoginError('هذا الحساب غير مسجّل في النظام — تواصل مع المالك');
+    }
+  } else {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('dashboard').classList.remove('visible');
+  }
+});
+</script>
+
+<script>
+/* ═══════════════════════════════════════
+   الهيكل الإداري — نفس تجميع منيو الفروع
+═══════════════════════════════════════ */
+const ROLE_LABELS = {
+  owner: '👑 المالك', ops_manager: '🏢 مدير التشغيل',
+  regional_manager: '🌍 مدير إقليمي', area_manager: '📍 مدير منطقة', branch_manager: '🏪 مدير فرع'
+};
+const ROLE_ORDER = ['owner','ops_manager','regional_manager','area_manager','branch_manager'];
+
+const DEFAULT_REGION_GROUPS = {
+  'إقليم الوسط':   ['منطقة الرياض','منطقة القصيم','منطقة حائل','منطقة الجوف','منطقة نجران'],
+  'إقليم الشرقية': ['المنطقة الشرقية'],
+  'إقليم الغربية': ['منطقة مكة','منطقة المدينة','منطقة تبوك','منطقة جازان','منطقة عسير'],
+};
+
+/* ═══════════════════════════════════════
+   LOGIN / LOGOUT
+═══════════════════════════════════════ */
+async function doLogin(){
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-password').value;
+  const btn   = document.getElementById('login-btn');
+  if(!email||!pass){ showLoginError('يرجى إدخال البريد وكلمة المرور'); return; }
+  btn.disabled=true; btn.textContent='⏳ جاري الدخول...';
+  document.getElementById('login-error').style.display='none';
+  try{
+    await window._fb.signInWithEmailAndPassword(window._auth, email, pass);
+  } catch(e){
+    const msgs={'auth/wrong-password':'كلمة المرور غير صحيحة','auth/user-not-found':'البريد غير موجود',
+      'auth/invalid-credential':'بيانات الدخول غير صحيحة','auth/too-many-requests':'محاولات كثيرة — انتظر قليلاً'};
+    showLoginError(msgs[e.code]||e.message);
+    btn.disabled=false; btn.textContent='دخول';
+  }
+}
+function showLoginError(msg){
+  const el=document.getElementById('login-error');
+  el.textContent=msg; el.style.display='block';
+  document.getElementById('login-btn').disabled=false;
+  document.getElementById('login-btn').textContent='دخول';
+}
+window.showLoginError = showLoginError;
+
+function doLogout(){
+  window._fb.signOut(window._auth);
+  document.getElementById('dashboard').classList.remove('visible');
+  document.getElementById('login-screen').style.display='flex';
+  showToast('تم تسجيل الخروج');
+}
+
+/* ═══════════════════════════════════════
+   SHOW DASHBOARD per role
+═══════════════════════════════════════ */
+function showDashboard(user){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('dashboard').classList.add('visible');
+  document.getElementById('login-btn').disabled=false;
+  document.getElementById('login-btn').textContent='دخول';
+
+  const role = user.role;
+  document.getElementById('top-role-label').textContent = `${ROLE_LABELS[role]||role} — ${user.name||''}`;
+  document.getElementById('stat-scope').textContent = user.scope==='all' ? 'الكل' : (user.scope||'—');
+
+  const canManageOrg   = ['owner','ops_manager'].includes(role);
+  const canManageUsers = role==='owner';
+  document.getElementById('tab-org-btn').style.display   = canManageOrg ? '' : 'none';
+  document.getElementById('tab-users-btn').style.display = canManageUsers ? '' : 'none';
+
+  loadComplaints();
+  loadStats();
+  if(canManageOrg) loadOrgStructure();
+  if(canManageUsers) loadUsers();
+}
+window.showDashboard = showDashboard;
+
+/* ═══════════════════════════════════════
+   ORG STRUCTURE — يُحمّل من Firestore أو يُبنى افتراضياً
+═══════════════════════════════════════ */
+async function getOrgStructure(){
+  try{
+    const ref  = window._fb.doc(window._db,'org_structure','main');
+    const snap = await window._fb.getDoc(ref);
+    if(snap.exists()) return snap.data();
+    // أول مرة — نزرع الهيكل الافتراضي
+    const seed = { regionGroups: DEFAULT_REGION_GROUPS, branchAreas: {} };
+    await window._fb.setDoc(ref, seed);
+    return seed;
+  } catch(e){ return { regionGroups: DEFAULT_REGION_GROUPS, branchAreas: {} }; }
+}
+
+function getRegionGroupOf(areaName, regionGroups){
+  for(const [group, areas] of Object.entries(regionGroups||{})){
+    if(areas.includes(areaName)) return group;
+  }
+  return 'غير محدد';
+}
+
+/* ═══════════════════════════════════════
+   COMPLAINTS — فلترة هرمية حسب الدور
+═══════════════════════════════════════ */
+async function loadComplaints(){
+  const list = document.getElementById('complaints-list');
+  list.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
+
+  const user = window._currentUser;
+  const tFilter = document.getElementById('filter-type')?.value;
+
+  try{
+    const snap = await window._fb.getDocs(window._fb.collection(window._db,'reviews'));
+    let reviews = snap.docs.map(d=>({id:d.id, ...d.data()}));
+
+    // فلترة هرمية
+    if(user.role==='branch_manager'){
+      reviews = reviews.filter(r=>r.branchKey===user.scope);
+    } else if(user.role==='area_manager'){
+      reviews = reviews.filter(r=>r.area===user.scope);
+    } else if(user.role==='regional_manager'){
+      reviews = reviews.filter(r=>r.regionGroup===user.scope);
+    }
+    // owner/ops_manager يشوفون الكل — بدون فلترة
+
+    if(tFilter==='complaint') reviews = reviews.filter(r=>r.isComplaint);
+    if(tFilter==='positive')  reviews = reviews.filter(r=>!r.isComplaint);
+
+    reviews.sort((a,b)=>{
+      if(a.isComplaint && !b.isComplaint) return -1;
+      if(!a.isComplaint && b.isComplaint) return 1;
+      return (b.createdAtClient||'').localeCompare(a.createdAtClient||'');
+    });
+
+    if(!reviews.length){ list.innerHTML='<div class="empty-state">📭 لا توجد تقييمات في نطاقك</div>'; return; }
+
+    list.innerHTML = reviews.map(r=>{
+      const isC = r.isComplaint;
+      const stars = '★'.repeat(r.quickStar||0)+'☆'.repeat(5-(r.quickStar||0));
+      return `
+        <div class="complaint-card ${isC?'is-complaint':''}">
+          <div class="complaint-head">
+            <div>
+              <span class="complaint-badge ${isC?'':'ok'}">${isC?'🚨 شكوى':'✅ إيجابي'}</span>
+              <span style="font-size:12px;font-weight:700;margin-right:6px">${r.branch||''}</span>
+              ${r.invoice?`<span class="complaint-meta">· فاتورة #${r.invoice}</span>`:''}
+            </div>
+            <button class="btn-danger" onclick="deleteReview('${r.id}')">🗑</button>
+          </div>
+          <div class="complaint-body">
+            <div class="complaint-stars" style="margin-bottom:6px">${stars}</div>
+            <div class="complaint-text">${r.comment||''}</div>
+            <div class="complaint-meta" style="margin-top:6px">${r.dateStr||''} · ${r.timeStr||''} · ${r.area||''}</div>
+          </div>
+        </div>`;
+    }).join('');
+  } catch(e){
+    list.innerHTML = `<div class="empty-state">⚠️ ${e.message}</div>`;
+  }
+}
+
+async function deleteReview(id){
+  if(!confirm('حذف هذا التقييم؟')) return;
+  try{
+    await window._fb.deleteDoc(window._fb.doc(window._db,'reviews',id));
+    showToast('تم الحذف'); loadComplaints(); loadStats();
+  } catch(e){ showToast('⚠️ خطأ في الحذف'); }
+}
+
+async function loadStats(){
+  const user = window._currentUser;
+  try{
+    const snap = await window._fb.getDocs(window._fb.collection(window._db,'reviews'));
+    let reviews = snap.docs.map(d=>d.data());
+    if(user.role==='branch_manager') reviews = reviews.filter(r=>r.branchKey===user.scope);
+    else if(user.role==='area_manager') reviews = reviews.filter(r=>r.area===user.scope);
+    else if(user.role==='regional_manager') reviews = reviews.filter(r=>r.regionGroup===user.scope);
+
+    const complaints = reviews.filter(r=>r.isComplaint);
+    const avg = reviews.length ? (reviews.reduce((s,r)=>s+(r.quickStar||0),0)/reviews.length).toFixed(1) : '—';
+    document.getElementById('stat-total').textContent = reviews.length;
+    document.getElementById('stat-complaints').textContent = complaints.length;
+    document.getElementById('stat-avg').textContent = avg;
+  } catch(e){ console.warn(e); }
+}
+
+/* ═══════════════════════════════════════
+   ORG STRUCTURE TAB
+═══════════════════════════════════════ */
+async function loadOrgStructure(){
+  const el = document.getElementById('org-tree');
+  try{
+    const org = await getOrgStructure();
+    window._orgCache = org;
+    let html = '';
+    Object.entries(org.regionGroups||{}).forEach(([group, areas])=>{
+      html += `<div style="margin-bottom:14px">
+        <div style="font-weight:700;color:var(--forest-dark);font-size:13px;margin-bottom:6px">🌍 ${group}</div>`;
+      areas.forEach(area=>{
+        const branches = Object.entries(org.branchAreas||{}).filter(([k,v])=>v===area).map(([k])=>k);
+        html += `<div style="margin:6px 0 6px 16px;font-size:12px;color:var(--muted)">
+          📍 ${area} ${branches.length?`— <span style="color:var(--forest)">${branches.join(', ')}</span>`:'<span style="opacity:.5">(لا فروع مُعيَّنة)</span>'}
+        </div>`;
+      });
+      html += `</div>`;
+    });
+    el.innerHTML = html || '<div class="empty-state">لا يوجد هيكل محفوظ</div>';
+  } catch(e){ el.innerHTML = `<div class="empty-state">⚠️ ${e.message}</div>`; }
+}
+
+async function assignBranchToArea(){
+  const code = document.getElementById('org-branch-code').value.trim().toUpperCase();
+  const area = document.getElementById('org-area-name').value.trim();
+  if(!code||!area){ showToast('⚠️ أدخل الكود والمنطقة'); return; }
+  try{
+    const ref = window._fb.doc(window._db,'org_structure','main');
+    const org = window._orgCache || await getOrgStructure();
+    org.branchAreas = org.branchAreas || {};
+    org.branchAreas[code] = area;
+    await window._fb.setDoc(ref, org);
+    showToast(`✅ تم ربط ${code} بـ ${area}`);
+    document.getElementById('org-branch-code').value='';
+    document.getElementById('org-area-name').value='';
+    loadOrgStructure();
+  } catch(e){ showToast('⚠️ '+e.message); }
+}
+
+/* ═══════════════════════════════════════
+   USERS TAB (owner only)
+═══════════════════════════════════════ */
+function updateScopeHint(){
+  const role = document.getElementById('nu-role').value;
+  const hints = {
+    owner:'النطاق: all (تلقائي)', ops_manager:'النطاق: all (تلقائي)',
+    regional_manager:'اكتب اسم الإقليم بالضبط، مثال: إقليم الوسط',
+    area_manager:'اكتب اسم المنطقة بالضبط، مثال: منطقة الرياض',
+    branch_manager:'اكتب كود الفرع، مثال: N02'
+  };
+  document.getElementById('scope-hint').textContent = hints[role]||'';
+}
+window.updateScopeHint = updateScopeHint;
+
+async function addUser(){
+  const name  = document.getElementById('nu-name').value.trim();
+  const email = document.getElementById('nu-email').value.trim();
+  const role  = document.getElementById('nu-role').value;
+  let scope   = document.getElementById('nu-scope').value.trim();
+  if(['owner','ops_manager'].includes(role)) scope='all';
+  if(!name||!email){ showToast('⚠️ الاسم والبريد مطلوبان'); return; }
+  if(!['owner','ops_manager'].includes(role) && !scope){ showToast('⚠️ حدّد النطاق'); return; }
+
+  const tempId = email.replace(/[.@]/g,'_');
+  try{
+    await window._fb.setDoc(window._fb.doc(window._db,'users',tempId), {
+      name, email, role, scope, createdAt: window._fb.serverTimestamp(),
+      note: 'يجب إنشاء حساب Firebase Auth بنفس البريد ثم تحديث Document ID لهذا الـ UID'
+    });
+    showToast(`✅ تم حفظ ${name} — أنشئ حساب Firebase بنفس البريد`);
+    ['nu-name','nu-email','nu-scope'].forEach(id=>document.getElementById(id).value='');
+    loadUsers();
+  } catch(e){ showToast('⚠️ '+e.message); }
+}
+
+async function loadUsers(){
+  const tbody = document.getElementById('users-tbody');
+  try{
+    const snap = await window._fb.getDocs(window._fb.collection(window._db,'users'));
+    if(!snap.size){ tbody.innerHTML='<tr><td colspan="4" class="empty-state">لا يوجد مستخدمون</td></tr>'; return; }
+    tbody.innerHTML = snap.docs.map(d=>{
+      const u = d.data();
+      return `<tr>
+        <td><strong>${u.name||d.id}</strong><br><span style="font-size:10px;color:var(--muted)">${u.email||''}</span></td>
+        <td><span class="role-badge role-${u.role}">${ROLE_LABELS[u.role]||u.role}</span></td>
+        <td style="font-size:11px">${u.scope||'—'}</td>
+        <td><button class="btn-danger" onclick="deleteUser('${d.id}')">حذف</button></td>
+      </tr>`;
+    }).join('');
+  } catch(e){ tbody.innerHTML=`<tr><td colspan="4" class="empty-state">⚠️ ${e.message}</td></tr>`; }
+}
+
+async function deleteUser(id){
+  if(!confirm('حذف هذا المستخدم؟')) return;
+  try{
+    await window._fb.deleteDoc(window._fb.doc(window._db,'users',id));
+    showToast('تم الحذف'); loadUsers();
+  } catch(e){ showToast('⚠️ خطأ'); }
+}
+
+/* ═══════════════════════════════════════
+   TABS
+═══════════════════════════════════════ */
+function switchTab(name){
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el=>el.classList.remove('active'));
+  document.getElementById(`tab-${name}`).classList.add('active');
+  event.target.classList.add('active');
+  if(name==='org') loadOrgStructure();
+  if(name==='users') loadUsers();
+  if(name==='complaints') loadComplaints();
+}
+
+/* ═══════════════════════════════════════
+   TOAST
+═══════════════════════════════════════ */
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+// Expose functions needed by inline onclick handlers
+window.doLogin=doLogin; window.doLogout=doLogout; window.switchTab=switchTab;
+window.deleteReview=deleteReview; window.assignBranchToArea=assignBranchToArea;
+window.addUser=addUser; window.deleteUser=deleteUser; window.loadComplaints=loadComplaints;
+</script>
+</body>
+</html>
