@@ -34,9 +34,7 @@
     --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* ===== RESET & BASE ===== */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; }
 
   body {
@@ -48,7 +46,6 @@
     position: relative;
   }
 
-  /* ===== BACKGROUND TEXTURE ===== */
   body::before {
     content: '';
     position: fixed;
@@ -69,7 +66,6 @@
     padding: 0 0 60px;
   }
 
-  /* ===== HEADER ===== */
   .site-header {
     background: linear-gradient(170deg, var(--forest-dark) 0%, var(--forest) 60%, #5f7260 100%);
     padding: 48px 24px 40px;
@@ -96,12 +92,7 @@
     clip-path: ellipse(55% 100% at 50% 100%);
   }
 
-  /* ===== LOGO FRAME ===== */
-  .logo-frame {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 24px;
-  }
+  .logo-frame { position: relative; display: inline-block; margin-bottom: 24px; }
 
   .logo-outer-ring {
     width: 120px;
@@ -116,636 +107,298 @@
     animation: logoFloat 6s ease-in-out infinite;
   }
 
-  @keyframes logoFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
-  }
+  @keyframes logoFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 
   .logo-inner {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: var(--cream);
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 100%; height: 100%; border-radius: 50%;
+    background: var(--cream); overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
   }
 
-  .logo-inner img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-  }
+  .logo-inner img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
   .logo-inner .logo-fallback {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 42px;
-    font-weight: 600;
-    color: var(--forest);
-    letter-spacing: -1px;
+    font-size: 42px; font-weight: 600; color: var(--forest); letter-spacing: -1px;
   }
 
   .logo-badge {
-    position: absolute;
-    bottom: 2px;
-    left: 50%;
-    transform: translateX(-50%);
+    position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
     background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 100%);
-    color: var(--forest-dark);
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    padding: 3px 10px;
-    border-radius: 20px;
-    text-transform: uppercase;
-    font-family: 'Lora', serif;
-    white-space: nowrap;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    color: var(--forest-dark); font-size: 9px; font-weight: 700; letter-spacing: 2px;
+    padding: 3px 10px; border-radius: 20px; text-transform: uppercase;
+    font-family: 'Lora', serif; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
   }
 
   .header-brand {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 52px;
-    font-weight: 300;
-    color: #fff;
-    letter-spacing: 6px;
-    line-height: 1;
-    margin-bottom: 8px;
+    font-family: 'Cormorant Garamond', serif; font-size: 52px; font-weight: 300;
+    color: #fff; letter-spacing: 6px; line-height: 1; margin-bottom: 8px;
     text-shadow: 0 2px 20px rgba(0,0,0,0.3);
   }
 
   .header-divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    margin: 12px auto;
-    width: 200px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px; margin: 12px auto; width: 200px;
   }
 
-  .header-divider::before,
-  .header-divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
+  .header-divider::before, .header-divider::after {
+    content: ''; flex: 1; height: 1px;
     background: linear-gradient(90deg, transparent, rgba(184,150,90,0.7), transparent);
   }
 
-  .header-divider-dot {
-    width: 5px;
-    height: 5px;
-    background: var(--gold);
-    border-radius: 50%;
-  }
+  .header-divider-dot { width: 5px; height: 5px; background: var(--gold); border-radius: 50%; }
 
   .header-slogan {
-    font-family: 'Noto Naskh Arabic', serif;
-    font-size: 15px;
-    font-weight: 400;
-    color: rgba(240,225,210,0.9);
-    letter-spacing: 0.5px;
-    font-style: italic;
-    margin-top: 4px;
+    font-family: 'Noto Naskh Arabic', serif; font-size: 15px; font-weight: 400;
+    color: rgba(240,225,210,0.9); letter-spacing: 0.5px; font-style: italic; margin-top: 4px;
   }
 
-  /* ===== MAIN CONTENT ===== */
-  .main-content {
-    padding: 32px 20px 0;
-  }
+  .main-content { padding: 32px 20px 0; }
 
-  /* ===== SECTION HEADERS ===== */
   .section-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 24px;
-    margin-top: 40px;
-    position: relative;
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 24px; margin-top: 40px; position: relative;
   }
 
-  .section-header:first-child {
-    margin-top: 0;
-  }
-
-  .section-icon {
-    font-size: 22px;
-    line-height: 1;
-  }
-
-  .section-title-wrap {
-    flex: 1;
-  }
+  .section-header.first { margin-top: 0; }
+  .section-icon { font-size: 22px; line-height: 1; }
+  .section-title-wrap { flex: 1; }
 
   .section-title {
-    font-family: 'Noto Naskh Arabic', serif;
-    font-size: 21px;
-    font-weight: 700;
-    color: var(--forest-dark);
-    line-height: 1.2;
+    font-family: 'Noto Naskh Arabic', serif; font-size: 21px; font-weight: 700;
+    color: var(--forest-dark); line-height: 1.2;
   }
 
   .section-subtitle {
-    font-family: 'Lora', serif;
-    font-size: 11px;
-    color: var(--gold);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    font-style: italic;
-    margin-top: 2px;
+    font-family: 'Lora', serif; font-size: 11px; color: var(--gold);
+    letter-spacing: 2px; text-transform: uppercase; font-style: italic; margin-top: 2px;
   }
 
-  .section-line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, var(--forest-pale), transparent);
+  .section-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--forest-pale), transparent); }
+
+  .product-grid { display: flex; flex-direction: column; gap: 14px; }
+
+  .empty-grid-note {
+    font-family: 'Lora', serif; font-size: 12px; font-style: italic;
+    color: var(--ink-light); opacity: 0.6; padding: 4px 2px;
   }
 
-  /* ===== PRODUCT GRID ===== */
-  .product-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  /* ===== PRODUCT CARD ===== */
   .product-card {
-    background: var(--warm-white);
-    border-radius: var(--radius-lg);
-    display: flex;
-    align-items: stretch;
-    overflow: hidden;
-    box-shadow:
-      0 2px 8px var(--shadow-warm),
-      0 1px 2px rgba(255,255,255,0.8) inset;
-    border: 1px solid rgba(255,255,255,0.7);
-    transition: var(--transition);
-    position: relative;
-    animation: cardReveal 0.5s ease both;
+    background: var(--warm-white); border-radius: var(--radius-lg);
+    display: flex; align-items: stretch; overflow: hidden;
+    box-shadow: 0 2px 8px var(--shadow-warm), 0 1px 2px rgba(255,255,255,0.8) inset;
+    border: 1px solid rgba(255,255,255,0.7); transition: var(--transition);
+    position: relative; animation: cardReveal 0.5s ease both;
   }
 
-  @keyframes cardReveal {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes cardReveal { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 
   .product-card:hover {
     transform: translateY(-3px);
-    box-shadow:
-      0 8px 24px var(--shadow-deep),
-      0 1px 2px rgba(255,255,255,0.8) inset;
+    box-shadow: 0 8px 24px var(--shadow-deep), 0 1px 2px rgba(255,255,255,0.8) inset;
   }
 
-  /* DELETE MODE */
-  .product-card.delete-mode .delete-btn {
-    display: flex;
-  }
+  .product-card.delete-mode .delete-btn { display: flex; }
 
   .delete-btn {
-    display: none;
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    width: 28px;
-    height: 28px;
-    background: #e53935;
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-    box-shadow: 0 2px 8px rgba(229,57,53,0.4);
-    transition: var(--transition);
-    line-height: 1;
+    display: none; position: absolute; top: 8px; left: 8px;
+    width: 28px; height: 28px; background: #e53935; color: #fff;
+    border: none; border-radius: 50%; font-size: 16px; font-weight: 700;
+    cursor: pointer; align-items: center; justify-content: center; z-index: 10;
+    box-shadow: 0 2px 8px rgba(229,57,53,0.4); transition: var(--transition); line-height: 1;
   }
 
-  .delete-btn:hover {
-    background: #c62828;
-    transform: scale(1.1);
-  }
+  .delete-btn:hover { background: #c62828; transform: scale(1.1); }
 
-  /* Card Image */
   .card-img-wrap {
-    width: 110px;
-    min-width: 110px;
-    position: relative;
-    overflow: hidden;
-    background: var(--beige-dark);
-    flex-shrink: 0;
+    width: 110px; min-width: 110px; position: relative;
+    overflow: hidden; background: var(--beige-dark); flex-shrink: 0;
   }
 
   .card-img-wrap::after {
-    content: '';
-    position: absolute;
-    inset: 0;
+    content: ''; position: absolute; inset: 0;
     background: linear-gradient(90deg, transparent 70%, var(--warm-white) 100%);
     pointer-events: none;
   }
 
-  .card-img-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.5s ease;
-  }
-
-  .product-card:hover .card-img-wrap img {
-    transform: scale(1.06);
-  }
+  .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
+  .product-card:hover .card-img-wrap img { transform: scale(1.06); }
 
   .card-img-placeholder {
-    width: 100%;
-    height: 100%;
-    min-height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 34px;
-    background: linear-gradient(135deg, var(--beige-dark) 0%, var(--beige) 100%);
+    width: 100%; height: 100%; min-height: 100px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 34px; background: linear-gradient(135deg, var(--beige-dark) 0%, var(--beige) 100%);
     color: var(--forest-light);
   }
 
-  /* Card Body */
   .card-body {
-    flex: 1;
-    padding: 18px 18px 18px 14px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 8px;
+    flex: 1; padding: 18px 18px 18px 14px;
+    display: flex; flex-direction: column; justify-content: center; gap: 8px;
   }
 
   .card-name {
-    font-family: 'Noto Naskh Arabic', serif;
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--ink);
-    line-height: 1.3;
+    font-family: 'Noto Naskh Arabic', serif; font-size: 17px; font-weight: 700;
+    color: var(--ink); line-height: 1.3;
   }
 
   .card-name-en {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 12px;
-    font-weight: 400;
-    font-style: italic;
-    color: var(--ink-light);
-    letter-spacing: 0.5px;
-    margin-top: 2px;
-    display: block;
+    font-family: 'Cormorant Garamond', serif; font-size: 12px; font-weight: 400;
+    font-style: italic; color: var(--ink-light); letter-spacing: 0.5px;
+    margin-top: 2px; display: block;
   }
 
-  .card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 4px;
-  }
-
-  .card-price {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 3px;
-  }
+  .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+  .card-price { display: inline-flex; align-items: baseline; gap: 3px; }
 
   .price-amount {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--forest);
-    line-height: 1;
+    font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600;
+    color: var(--forest); line-height: 1;
   }
 
   .price-currency {
-    font-family: 'Noto Naskh Arabic', serif;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--forest-light);
-    letter-spacing: 0.5px;
+    font-family: 'Noto Naskh Arabic', serif; font-size: 11px; font-weight: 600;
+    color: var(--forest-light); letter-spacing: 0.5px;
   }
 
   .card-dot {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
+    width: 28px; height: 28px; border-radius: 50%;
     background: linear-gradient(135deg, var(--forest) 0%, var(--forest-light) 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
   }
 
-  .card-dot svg {
-    width: 12px;
-    height: 12px;
-    fill: none;
-    stroke: rgba(255,255,255,0.8);
-    stroke-width: 2;
-  }
+  .card-dot svg { width: 12px; height: 12px; fill: none; stroke: rgba(255,255,255,0.8); stroke-width: 2; }
 
-  /* ===== ORNAMENTAL SEPARATOR ===== */
-  .ornament {
-    text-align: center;
-    padding: 28px 0 4px;
-    color: var(--gold);
-    font-size: 18px;
-    letter-spacing: 12px;
-    opacity: 0.6;
-  }
+  .ornament { text-align: center; padding: 28px 0 4px; color: var(--gold); font-size: 18px; letter-spacing: 12px; opacity: 0.6; }
 
-  /* ===== REVIEW CTA ===== */
-  .review-section {
-    margin: 40px 20px 0;
-    text-align: center;
-  }
+  .review-section { margin: 40px 20px 0; text-align: center; }
 
   .review-section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 13px;
-    font-weight: 400;
-    font-style: italic;
-    color: var(--ink-light);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 16px;
-    opacity: 0.7;
+    font-family: 'Cormorant Garamond', serif; font-size: 13px; font-weight: 400;
+    font-style: italic; color: var(--ink-light); letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 16px; opacity: 0.7;
   }
 
   .review-cta-btn {
-    display: block;
-    width: 100%;
-    padding: 20px 28px;
+    display: block; width: 100%; padding: 20px 28px;
     background: linear-gradient(135deg, var(--forest-dark) 0%, var(--forest) 60%, #5f7260 100%);
-    color: #fff;
-    text-decoration: none;
-    border-radius: var(--radius-xl);
-    font-family: 'Noto Naskh Arabic', serif;
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-    line-height: 1.4;
-    border: none;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    box-shadow:
-      0 8px 32px rgba(80,95,80,0.3),
-      0 2px 0 rgba(255,255,255,0.1) inset,
-      0 -2px 0 rgba(0,0,0,0.15) inset;
+    color: #fff; text-decoration: none; border-radius: var(--radius-xl);
+    font-family: 'Noto Naskh Arabic', serif; font-size: 16px; font-weight: 600;
+    letter-spacing: 0.3px; line-height: 1.4; border: none; cursor: pointer;
+    position: relative; overflow: hidden;
+    box-shadow: 0 8px 32px rgba(80,95,80,0.3), 0 2px 0 rgba(255,255,255,0.1) inset, 0 -2px 0 rgba(0,0,0,0.15) inset;
     transition: var(--transition);
   }
 
   .review-cta-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
+    content: ''; position: absolute; inset: 0;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.6s ease;
+    transform: translateX(-100%); transition: transform 0.6s ease;
   }
 
-  .review-cta-btn:hover::before {
-    transform: translateX(100%);
-  }
-
-  .review-cta-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(80,95,80,0.4);
-  }
-
-  .review-cta-btn:active {
-    transform: translateY(0);
-  }
+  .review-cta-btn:hover::before { transform: translateX(100%); }
+  .review-cta-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(80,95,80,0.4); }
+  .review-cta-btn:active { transform: translateY(0); }
 
   .review-branch-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 14px;
-    background: rgba(80,95,80,0.08);
-    border: 1px solid rgba(80,95,80,0.15);
-    border-radius: 20px;
-    padding: 6px 14px;
-    font-family: 'Noto Naskh Arabic', serif;
-    font-size: 12px;
-    color: var(--forest-dark);
-    font-weight: 500;
+    display: inline-flex; align-items: center; gap: 6px; margin-top: 14px;
+    background: rgba(80,95,80,0.08); border: 1px solid rgba(80,95,80,0.15);
+    border-radius: 20px; padding: 6px 14px; font-family: 'Noto Naskh Arabic', serif;
+    font-size: 12px; color: var(--forest-dark); font-weight: 500;
   }
 
-  .branch-dot {
-    width: 7px;
-    height: 7px;
-    background: var(--forest);
-    border-radius: 50%;
-    animation: blink 2s ease-in-out infinite;
-  }
+  .branch-dot { width: 7px; height: 7px; background: var(--forest); border-radius: 50%; animation: blink 2s ease-in-out infinite; }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-
-  /* ===== FOOTER ===== */
   .site-footer {
-    text-align: center;
-    padding: 32px 20px 20px;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 12px;
-    color: var(--ink-light);
-    font-style: italic;
-    letter-spacing: 1px;
-    opacity: 0.5;
+    text-align: center; padding: 32px 20px 20px; font-family: 'Cormorant Garamond', serif;
+    font-size: 12px; color: var(--ink-light); font-style: italic; letter-spacing: 1px; opacity: 0.5;
   }
 
-  /* ===== ADMIN PANEL ===== */
-  .admin-toggle-bar {
-    margin: 24px 20px 0;
-    text-align: center;
-  }
+  .admin-toggle-bar { margin: 24px 20px 0; text-align: center; }
 
   .admin-toggle-btn {
-    background: transparent;
-    border: 1.5px solid var(--forest-pale);
-    color: var(--forest-light);
-    font-family: 'Noto Naskh Arabic', serif;
-    font-size: 13px;
-    padding: 9px 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: var(--transition);
-    letter-spacing: 0.5px;
+    background: transparent; border: 1.5px solid var(--forest-pale); color: var(--forest-light);
+    font-family: 'Noto Naskh Arabic', serif; font-size: 13px; padding: 9px 20px;
+    border-radius: 20px; cursor: pointer; transition: var(--transition); letter-spacing: 0.5px;
   }
 
-  .admin-toggle-btn:hover {
-    border-color: var(--forest);
-    color: var(--forest-dark);
-    background: rgba(80,95,80,0.05);
-  }
+  .admin-toggle-btn:hover { border-color: var(--forest); color: var(--forest-dark); background: rgba(80,95,80,0.05); }
 
   .admin-panel {
-    display: none;
-    margin: 20px 20px 0;
-    background: var(--warm-white);
-    border-radius: var(--radius-lg);
-    border: 1.5px solid var(--forest-pale);
-    overflow: hidden;
-    box-shadow: 0 4px 20px var(--shadow-warm);
-    animation: panelSlide 0.3s ease both;
+    display: none; margin: 20px 20px 0; background: var(--warm-white);
+    border-radius: var(--radius-lg); border: 1.5px solid var(--forest-pale);
+    overflow: hidden; box-shadow: 0 4px 20px var(--shadow-warm); animation: panelSlide 0.3s ease both;
   }
 
-  @keyframes panelSlide {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes panelSlide { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
   .admin-panel.open { display: block; }
-
-  .admin-section {
-    padding: 20px 20px 16px;
-    border-bottom: 1px solid var(--beige-dark);
-  }
-
+  .admin-section { padding: 20px 20px 16px; border-bottom: 1px solid var(--beige-dark); }
   .admin-section:last-child { border-bottom: none; }
 
   .admin-section-title {
-    font-family: 'Noto Naskh Arabic', serif;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--forest-dark);
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-family: 'Noto Naskh Arabic', serif; font-size: 14px; font-weight: 700;
+    color: var(--forest-dark); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
   }
 
-  .admin-section-title .admin-icon {
-    font-size: 16px;
-  }
-
-  /* Admin Controls */
-  .admin-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
+  .admin-section-title .admin-icon { font-size: 16px; }
+  .admin-row { display: flex; gap: 10px; margin-bottom: 10px; }
 
   .admin-input {
-    flex: 1;
-    padding: 10px 14px;
-    border: 1.5px solid var(--beige-dark);
-    border-radius: var(--radius-sm);
-    background: var(--beige);
-    font-family: 'Noto Naskh Arabic', serif;
-    font-size: 13px;
-    color: var(--ink);
-    outline: none;
-    transition: var(--transition);
-    direction: rtl;
+    flex: 1; padding: 10px 14px; border: 1.5px solid var(--beige-dark);
+    border-radius: var(--radius-sm); background: var(--beige);
+    font-family: 'Noto Naskh Arabic', serif; font-size: 13px; color: var(--ink);
+    outline: none; transition: var(--transition); direction: rtl;
   }
 
-  .admin-input:focus {
-    border-color: var(--forest-light);
-    background: #fff;
-    box-shadow: 0 0 0 3px rgba(80,95,80,0.08);
-  }
-
+  .admin-input:focus { border-color: var(--forest-light); background: #fff; box-shadow: 0 0 0 3px rgba(80,95,80,0.08); }
   .admin-input::placeholder { color: rgba(44,36,22,0.35); }
 
   .admin-select {
-    flex: 1;
-    padding: 10px 14px;
-    border: 1.5px solid var(--beige-dark);
-    border-radius: var(--radius-sm);
-    background: var(--beige);
-    font-family: 'Noto Naskh Arabic', serif;
-    font-size: 13px;
-    color: var(--ink);
-    outline: none;
-    cursor: pointer;
-    direction: rtl;
-    transition: var(--transition);
+    flex: 1; padding: 10px 14px; border: 1.5px solid var(--beige-dark);
+    border-radius: var(--radius-sm); background: var(--beige);
+    font-family: 'Noto Naskh Arabic', serif; font-size: 13px; color: var(--ink);
+    outline: none; cursor: pointer; direction: rtl; transition: var(--transition);
   }
 
-  .admin-select:focus {
-    border-color: var(--forest-light);
-    background: #fff;
-  }
+  .admin-select:focus { border-color: var(--forest-light); background: #fff; }
 
   .admin-btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    font-family: 'Noto Naskh Arabic', serif;
-    font-size: 13px;
-    font-weight: 700;
-    transition: var(--transition);
+    padding: 10px 20px; border: none; border-radius: var(--radius-sm); cursor: pointer;
+    font-family: 'Noto Naskh Arabic', serif; font-size: 13px; font-weight: 700; transition: var(--transition);
   }
 
   .admin-btn-add {
     background: linear-gradient(135deg, var(--forest) 0%, var(--forest-dark) 100%);
-    color: #fff;
-    box-shadow: 0 3px 10px rgba(80,95,80,0.25);
-    width: 100%;
-    padding: 12px;
-    margin-top: 4px;
+    color: #fff; box-shadow: 0 3px 10px rgba(80,95,80,0.25); width: 100%; padding: 12px; margin-top: 4px;
   }
 
-  .admin-btn-add:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 5px 15px rgba(80,95,80,0.35);
-  }
+  .admin-btn-add:hover { transform: translateY(-1px); box-shadow: 0 5px 15px rgba(80,95,80,0.35); }
 
   .admin-btn-delete {
     background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
-    color: #fff;
-    width: 100%;
-    padding: 12px;
-    box-shadow: 0 3px 10px rgba(229,57,53,0.2);
+    color: #fff; width: 100%; padding: 12px; box-shadow: 0 3px 10px rgba(229,57,53,0.2);
   }
 
-  .admin-btn-delete:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 5px 15px rgba(229,57,53,0.3);
-  }
+  .admin-btn-delete:hover { transform: translateY(-1px); box-shadow: 0 5px 15px rgba(229,57,53,0.3); }
 
   .admin-btn-delete.active {
     background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
     box-shadow: 0 3px 10px rgba(56,142,60,0.25);
   }
 
-  .branch-select-wrap {
-    position: relative;
-  }
+  .branch-select-wrap { position: relative; }
 
-  /* ===== TOAST ===== */
   .toast {
-    position: fixed;
-    bottom: 28px;
-    left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--forest-dark);
-    color: #fff;
-    padding: 12px 24px;
-    border-radius: 30px;
-    font-family: 'Noto Naskh Arabic', serif;
-    font-size: 13px;
-    font-weight: 600;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.2);
-    z-index: 999;
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    white-space: nowrap;
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--forest-dark); color: #fff; padding: 12px 24px; border-radius: 30px;
+    font-family: 'Noto Naskh Arabic', serif; font-size: 13px; font-weight: 600;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.2); z-index: 999;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); white-space: nowrap;
   }
 
-  .toast.show {
-    transform: translateX(-50%) translateY(0);
-  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
 
-  /* ===== RESPONSIVE ===== */
   @media (max-width: 380px) {
     .card-img-wrap { width: 90px; min-width: 90px; }
     .card-name { font-size: 15px; }
@@ -757,7 +410,6 @@
 
 <body>
 
-<!-- ===== HEADER ===== -->
 <header class="site-header">
   <div class="logo-frame">
     <div class="logo-outer-ring">
@@ -778,43 +430,11 @@
   <p class="header-slogan">نمق ليس مجرد قهوة...</p>
 </header>
 
-<!-- ===== MAIN CONTENT ===== -->
 <div class="page-wrapper">
-  <main class="main-content">
-
-    <!-- DRINKS SECTION -->
-    <div class="section-header">
-      <span class="section-icon">☕</span>
-      <div class="section-title-wrap">
-        <h2 class="section-title">مشروبات نمق</h2>
-        <div class="section-subtitle">Signature Drinks</div>
-      </div>
-      <div class="section-line"></div>
-    </div>
-
-    <div class="product-grid" id="drinks-grid">
-      <!-- Products injected by JS -->
-    </div>
-
-    <div class="ornament">✦ ✦ ✦</div>
-
-    <!-- SWEETS SECTION -->
-    <div class="section-header" style="margin-top: 32px;">
-      <span class="section-icon">🍰</span>
-      <div class="section-title-wrap">
-        <h2 class="section-title">حلا نمق المميز</h2>
-        <div class="section-subtitle">Premium Desserts</div>
-      </div>
-      <div class="section-line"></div>
-    </div>
-
-    <div class="product-grid" id="sweets-grid">
-      <!-- Products injected by JS -->
-    </div>
-
+  <main class="main-content" id="menu-sections">
+    <!-- Category sections injected by JS -->
   </main>
 
-  <!-- ===== REVIEW CTA ===== -->
   <section class="review-section">
     <p class="review-section-title">Share Your Experience</p>
     <a href="#" id="review-cta-btn" class="review-cta-btn" target="_blank" rel="noopener">
@@ -826,15 +446,12 @@
     </div>
   </section>
 
-  <!-- ===== ADMIN TOGGLE ===== -->
   <div class="admin-toggle-bar">
     <button class="admin-toggle-btn" onclick="toggleAdmin()">⚙️ لوحة تحكم المدير</button>
   </div>
 
-  <!-- ===== ADMIN PANEL ===== -->
   <div class="admin-panel" id="admin-panel">
 
-    <!-- BRANCH SWITCHER -->
     <div class="admin-section">
       <div class="admin-section-title"><span class="admin-icon">📍</span> تغيير الفرع</div>
       <div class="branch-select-wrap">
@@ -846,7 +463,16 @@
       </div>
     </div>
 
-    <!-- ADD PRODUCT -->
+    <!-- ADD CATEGORY -->
+    <div class="admin-section">
+      <div class="admin-section-title"><span class="admin-icon">📂</span> إضافة مجموعة جديدة</div>
+      <div class="admin-row">
+        <input type="text" class="admin-input" id="new-cat-name" placeholder="اسم المجموعة (مثال: مشروبات ساخنة)" style="flex:2">
+        <input type="text" class="admin-input" id="new-cat-emoji" placeholder="إيموجي" style="flex:1" maxlength="4">
+      </div>
+      <button class="admin-btn admin-btn-add" onclick="addCategory()">إضافة المجموعة ✓</button>
+    </div>
+
     <div class="admin-section">
       <div class="admin-section-title"><span class="admin-icon">➕</span> إضافة منتج جديد</div>
       <div class="admin-row">
@@ -854,16 +480,12 @@
         <input type="number" class="admin-input" id="new-price" placeholder="السعر" style="flex:1">
       </div>
       <div class="admin-row">
-        <select class="admin-select" id="new-category">
-          <option value="drinks">مشروبات ☕</option>
-          <option value="sweets">حلويات 🍰</option>
-        </select>
+        <select class="admin-select" id="new-category"></select>
         <input type="text" class="admin-input" id="new-image" placeholder="رابط الصورة (اختياري)" style="flex:2">
       </div>
       <button class="admin-btn admin-btn-add" onclick="addProduct()">إضافة المنتج ✓</button>
     </div>
 
-    <!-- DELETE MODE -->
     <div class="admin-section">
       <div class="admin-section-title"><span class="admin-icon">🗑️</span> حذف منتج</div>
       <button class="admin-btn admin-btn-delete" id="delete-toggle-btn" onclick="toggleDeleteMode()">
@@ -873,38 +495,32 @@
 
   </div>
 
-  <!-- FOOTER -->
   <footer class="site-footer">
     © نمق للقهوة المتخصصة · جميع الحقوق محفوظة
   </footer>
 </div>
 
-<!-- ===== TOAST ===== -->
 <div class="toast" id="toast"></div>
 
 <script>
   /* ===== BRANCH CONFIG ===== */
-  /* 🔧 Change these URLs to update review links without touching the QR code */
   const BRANCHES = {
-    riyadh: {
-      name: 'قصر الحكم — الرياض',
-      reviewUrl: 'https://g.page/r/namaq-riyadh/review'
-    },
-    jeddah: {
-      name: 'البطارقي — جدة',
-      reviewUrl: 'https://g.page/r/namaq-jeddah/review'
-    },
-    jubail: {
-      name: 'الفناتير — الجبيل',
-      reviewUrl: 'https://g.page/r/namaq-jubail/review'
-    }
+    riyadh: { name: 'قصر الحكم — الرياض', reviewUrl: 'https://g.page/r/namaq-riyadh/review' },
+    jeddah: { name: 'البطارقي — جدة', reviewUrl: 'https://g.page/r/namaq-jeddah/review' },
+    jubail: { name: 'الفناتير — الجبيل', reviewUrl: 'https://g.page/r/namaq-jubail/review' }
   };
 
   let activeBranch = 'riyadh';
   let deleteMode = false;
 
-  /* ===== INITIAL PRODUCTS ===== */
-  const INITIAL_PRODUCTS = {
+  /* ===== CATEGORIES (now dynamic — add as many as you want) ===== */
+  let CATEGORIES = {
+    drinks: { name: 'مشروبات نمق', nameEn: 'Signature Drinks', icon: '☕' },
+    sweets: { name: 'حلا نمق المميز', nameEn: 'Premium Desserts', icon: '🍰' }
+  };
+
+  /* ===== PRODUCTS keyed by category id ===== */
+  let PRODUCTS = {
     drinks: [
       { id: 'd1', name: 'V60', nameEn: 'Pour Over', price: 18, emoji: '☕' },
       { id: 'd2', name: 'فلات وايت', nameEn: 'Flat White', price: 16, emoji: '🥛' },
@@ -919,15 +535,18 @@
     ]
   };
 
+  let newIdCounter = 100;
+  let catIdCounter = 100;
+
   /* ===== CREATE CARD ===== */
-  function createCard(product) {
+  function createCard(product, catId) {
     const card = document.createElement('div');
     card.className = 'product-card';
     card.dataset.id = product.id;
 
     const imgContent = product.imageUrl
       ? `<img src="${product.imageUrl}" alt="${product.name}" loading="lazy">`
-      : `<div class="card-img-placeholder">${product.emoji || '☕'}</div>`;
+      : `<div class="card-img-placeholder">${product.emoji || CATEGORIES[catId]?.icon || '☕'}</div>`;
 
     card.innerHTML = `
       <button class="delete-btn" onclick="deleteCard('${product.id}')" aria-label="حذف">×</button>
@@ -949,59 +568,121 @@
       </div>
     `;
 
-    if (deleteMode) {
-      card.classList.add('delete-mode');
-    }
+    if (deleteMode) card.classList.add('delete-mode');
     return card;
   }
 
-  /* ===== RENDER INITIAL PRODUCTS ===== */
-  function renderInitial() {
-    const dg = document.getElementById('drinks-grid');
-    const sg = document.getElementById('sweets-grid');
+  /* ===== RENDER ALL SECTIONS (rebuilds the whole menu area) ===== */
+  function renderAllSections() {
+    const container = document.getElementById('menu-sections');
+    container.innerHTML = '';
 
-    INITIAL_PRODUCTS.drinks.forEach((p, i) => {
-      const card = createCard(p);
-      card.style.animationDelay = `${i * 0.08}s`;
-      dg.appendChild(card);
+    const catIds = Object.keys(CATEGORIES);
+
+    catIds.forEach((catId, idx) => {
+      const cat = CATEGORIES[catId];
+
+      if (idx > 0) {
+        const ornament = document.createElement('div');
+        ornament.className = 'ornament';
+        ornament.textContent = '✦ ✦ ✦';
+        container.appendChild(ornament);
+      }
+
+      const header = document.createElement('div');
+      header.className = 'section-header' + (idx === 0 ? ' first' : '');
+      header.innerHTML = `
+        <span class="section-icon">${cat.icon || '🍽️'}</span>
+        <div class="section-title-wrap">
+          <h2 class="section-title">${cat.name}</h2>
+          <div class="section-subtitle">${cat.nameEn || ''}</div>
+        </div>
+        <div class="section-line"></div>
+      `;
+      container.appendChild(header);
+
+      const grid = document.createElement('div');
+      grid.className = 'product-grid';
+      grid.id = `grid-${catId}`;
+      container.appendChild(grid);
+
+      const items = PRODUCTS[catId] || [];
+      if (items.length === 0) {
+        const note = document.createElement('p');
+        note.className = 'empty-grid-note';
+        note.textContent = 'لا توجد منتجات في هذه المجموعة بعد';
+        grid.appendChild(note);
+      } else {
+        items.forEach((p, i) => {
+          const card = createCard(p, catId);
+          card.style.animationDelay = `${i * 0.08}s`;
+          grid.appendChild(card);
+        });
+      }
     });
 
-    INITIAL_PRODUCTS.sweets.forEach((p, i) => {
-      const card = createCard(p);
-      card.style.animationDelay = `${i * 0.08}s`;
-      sg.appendChild(card);
-    });
+    updateCategoryDropdown();
+  }
+
+  /* ===== KEEP "add product" DROPDOWN IN SYNC WITH CATEGORIES ===== */
+  function updateCategoryDropdown() {
+    const select = document.getElementById('new-category');
+    const current = select.value;
+    select.innerHTML = Object.entries(CATEGORIES)
+      .map(([id, cat]) => `<option value="${id}">${cat.name} ${cat.icon || ''}</option>`)
+      .join('');
+    if (CATEGORIES[current]) select.value = current;
+  }
+
+  /* ===== ADD CATEGORY ===== */
+  function addCategory() {
+    const nameInput = document.getElementById('new-cat-name');
+    const emojiInput = document.getElementById('new-cat-emoji');
+    const name = nameInput.value.trim();
+    let emoji = emojiInput.value.trim();
+
+    if (!name) { showToast('⚠️ يرجى إدخال اسم المجموعة'); return; }
+    if (!emoji) emoji = '🍽️';
+
+    const catId = `cat-${++catIdCounter}`;
+    CATEGORIES[catId] = { name, nameEn: '', icon: emoji };
+    PRODUCTS[catId] = [];
+
+    renderAllSections();
+
+    nameInput.value = '';
+    emojiInput.value = '';
+    showToast(`✅ تم إضافة مجموعة "${name}"`);
   }
 
   /* ===== ADD PRODUCT ===== */
-  let newIdCounter = 100;
-
   function addProduct() {
     const name = document.getElementById('new-name').value.trim();
     const price = parseInt(document.getElementById('new-price').value);
-    const category = document.getElementById('new-category').value;
+    const catId = document.getElementById('new-category').value;
     const imageUrl = document.getElementById('new-image').value.trim();
 
     if (!name) { showToast('⚠️ يرجى إدخال اسم المنتج'); return; }
     if (!price || price <= 0) { showToast('⚠️ يرجى إدخال سعر صحيح'); return; }
+    if (!catId || !CATEGORIES[catId]) { showToast('⚠️ يرجى اختيار مجموعة'); return; }
 
     const product = {
       id: `custom-${++newIdCounter}`,
       name,
       price,
       imageUrl: imageUrl || null,
-      emoji: category === 'drinks' ? '☕' : '🍰'
+      emoji: CATEGORIES[catId].icon || '🍽️'
     };
 
-    const gridId = category === 'drinks' ? 'drinks-grid' : 'sweets-grid';
-    const grid = document.getElementById(gridId);
-    const card = createCard(product);
-    grid.appendChild(card);
+    if (!PRODUCTS[catId]) PRODUCTS[catId] = [];
+    PRODUCTS[catId].push(product);
 
-    // clear fields
+    renderAllSections();
+
     document.getElementById('new-name').value = '';
     document.getElementById('new-price').value = '';
     document.getElementById('new-image').value = '';
+    document.getElementById('new-category').value = catId;
 
     showToast(`✅ تم إضافة "${name}" بنجاح`);
   }
@@ -1013,7 +694,12 @@
     card.style.transition = 'all 0.3s ease';
     card.style.opacity = '0';
     card.style.transform = 'scale(0.85) translateX(20px)';
-    setTimeout(() => card.remove(), 300);
+    setTimeout(() => {
+      for (const catId in PRODUCTS) {
+        PRODUCTS[catId] = PRODUCTS[catId].filter(p => p.id !== id);
+      }
+      card.remove();
+    }, 300);
     showToast('🗑️ تم حذف المنتج');
   }
 
@@ -1023,9 +709,7 @@
     const btn = document.getElementById('delete-toggle-btn');
     const allCards = document.querySelectorAll('.product-card');
 
-    allCards.forEach(card => {
-      card.classList.toggle('delete-mode', deleteMode);
-    });
+    allCards.forEach(card => card.classList.toggle('delete-mode', deleteMode));
 
     if (deleteMode) {
       btn.textContent = '✅ إيقاف وضع الحذف';
@@ -1043,17 +727,14 @@
     const select = document.getElementById('branch-select');
     activeBranch = select.value;
     const branch = BRANCHES[activeBranch];
-
     document.getElementById('review-cta-btn').href = branch.reviewUrl;
     document.getElementById('branch-label').textContent = branch.name;
-
     showToast(`📍 تم التبديل إلى: ${branch.name}`);
   }
 
   /* ===== ADMIN PANEL TOGGLE ===== */
   function toggleAdmin() {
-    const panel = document.getElementById('admin-panel');
-    panel.classList.toggle('open');
+    document.getElementById('admin-panel').classList.toggle('open');
   }
 
   /* ===== TOAST ===== */
@@ -1068,8 +749,7 @@
 
   /* ===== INIT ===== */
   document.addEventListener('DOMContentLoaded', () => {
-    renderInitial();
-    // Set initial review URL
+    renderAllSections();
     document.getElementById('review-cta-btn').href = BRANCHES[activeBranch].reviewUrl;
   });
 </script>
