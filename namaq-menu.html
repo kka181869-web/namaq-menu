@@ -732,9 +732,20 @@
     showToast(`📍 تم التبديل إلى: ${branch.name}`);
   }
 
-  /* ===== ADMIN PANEL TOGGLE ===== */
+  /* ===== ADMIN PANEL TOGGLE (password protected) ===== */
+  const ADMIN_PASSWORD = 'N27 N19';
+
   function toggleAdmin() {
-    document.getElementById('admin-panel').classList.toggle('open');
+    const panel = document.getElementById('admin-panel');
+    if (!panel.classList.contains('open')) {
+      const entered = prompt('🔒 أدخل كلمة السر للدخول للوحة تحكم المدير:');
+      if (entered === null) return; // cancelled
+      if (entered !== ADMIN_PASSWORD) {
+        showToast('⚠️ كلمة السر غير صحيحة');
+        return;
+      }
+    }
+    panel.classList.toggle('open');
   }
 
   /* ===== TOAST ===== */
