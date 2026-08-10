@@ -8,6 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
 <style>
 /* ══ RESET ══ */
@@ -47,100 +50,6 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
   white-space:nowrap;pointer-events:none;opacity:0;transition:var(--t);
 }
 .pager-float:hover .pager-float-tooltip{opacity:1}
-
-/* ══ PAGER HERO ══ */
-.pager-hero{
-  background:linear-gradient(160deg,#0f0e0c 0%,#1e1c16 60%,#2a2416 100%);
-  min-height:100vh;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:60px 24px 80px;position:relative;overflow:hidden;
-}
-.pager-hero::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,transparent,var(--gold),var(--gold2),var(--gold),transparent);
-}
-.pager-hero::after{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(184,150,90,0.08) 0%,transparent 60%);
-  pointer-events:none;
-}
-.pager-logo{text-align:center;margin-bottom:28px;position:relative;z-index:1}
-.pager-ring{
-  width:96px;height:96px;border-radius:50%;margin:0 auto 12px;
-  border:2px solid rgba(184,150,90,0.35);
-  background:rgba(184,150,90,0.06);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 0 8px rgba(184,150,90,0.04),0 0 40px rgba(184,150,90,0.1);
-  animation:glow 4s ease-in-out infinite;
-}
-@keyframes glow{
-  0%,100%{box-shadow:0 0 0 8px rgba(184,150,90,0.04),0 0 40px rgba(184,150,90,0.1)}
-  50%{box-shadow:0 0 0 14px rgba(184,150,90,0.03),0 0 60px rgba(184,150,90,0.18)}
-}
-.pager-ring-text{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--gold2);letter-spacing:1px}
-.pager-brand{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:500;color:#fff;letter-spacing:6px}
-.pager-slogan{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:rgba(255,255,255,0.38);margin-top:6px;letter-spacing:1px}
-
-.pager-bell{font-size:52px;display:block;margin-bottom:14px;animation:ring 4s ease-in-out infinite}
-@keyframes ring{
-  0%,100%{transform:rotate(0)}8%{transform:rotate(-12deg)}16%{transform:rotate(12deg)}
-  24%{transform:rotate(-8deg)}32%{transform:rotate(8deg)}40%{transform:rotate(0)}
-}
-.pager-h1{font-size:26px;font-weight:700;color:#fff;margin-bottom:8px;line-height:1.3;text-align:center}
-.pager-p{font-size:14px;color:rgba(255,255,255,0.45);line-height:1.7;max-width:280px;text-align:center;margin:0 auto}
-
-.pager-steps{
-  display:flex;flex-direction:column;gap:11px;
-  margin:32px 0 40px;width:100%;max-width:340px;position:relative;z-index:1;
-}
-.pager-step{
-  display:flex;align-items:center;gap:14px;
-  background:rgba(255,255,255,0.04);border:1px solid rgba(184,150,90,0.18);
-  border-radius:13px;padding:13px 16px;transition:var(--t);
-}
-.pager-step:hover{background:rgba(184,150,90,0.07);border-color:rgba(184,150,90,0.35);transform:translateX(-3px)}
-.step-num{
-  width:33px;height:33px;border-radius:50%;flex-shrink:0;
-  background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 100%);
-  color:#0f0e0c;font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;
-  display:flex;align-items:center;justify-content:center;
-}
-.step-label{font-size:14px;font-weight:700;color:#fff;margin-bottom:2px}
-.step-desc{font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5}
-
-.pager-cta{
-  width:100%;max-width:340px;text-align:center;position:relative;z-index:1;
-}
-.pager-btn{
-  display:block;width:100%;padding:19px 32px;
-  background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 50%,var(--gold) 100%);
-  color:#0f0e0c;text-decoration:none;border-radius:50px;
-  font-size:17px;font-weight:700;border:none;cursor:pointer;
-  box-shadow:0 8px 32px rgba(184,150,90,0.38);
-  transition:var(--t);position:relative;overflow:hidden;
-  animation:btnGlow 3s ease-in-out infinite;
-}
-@keyframes btnGlow{
-  0%,100%{box-shadow:0 8px 32px rgba(184,150,90,0.38)}
-  50%{box-shadow:0 12px 48px rgba(184,150,90,0.58)}
-}
-.pager-btn:hover{transform:translateY(-3px)}
-.pager-btn::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
-  transform:translateX(-100%);transition:transform 0.6s ease;
-}
-.pager-btn:hover::before{transform:translateX(100%)}
-.pager-sub{font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;color:rgba(255,255,255,0.28);margin-top:10px;letter-spacing:1px}
-
-.scroll-hint{
-  position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
-  color:rgba(255,255,255,0.22);font-size:11px;letter-spacing:2px;
-  font-family:'Cormorant Garamond',serif;display:flex;flex-direction:column;
-  align-items:center;gap:4px;cursor:pointer;
-  animation:bounce 2s ease-in-out infinite;z-index:1;
-}
-@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
 
 /* ══ BRANCH BAR ══ */
 .branch-bar{
@@ -207,15 +116,16 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
 
 /* ══ SECTION HEADER ══ */
 .section-hd{display:flex;align-items:center;gap:12px;margin-bottom:20px;margin-top:36px}
-.section-hd:first-child{margin-top:0}
+.section-hd.first{margin-top:0}
 .section-hd-icon{font-size:20px;line-height:1}
-.section-hd-info{}
+.section-hd-info{flex:1}
 .section-hd-title{font-family:'Noto Naskh Arabic',serif;font-size:20px;font-weight:700;color:var(--forest-dark);line-height:1.2}
 .section-hd-sub{font-family:'Cormorant Garamond',serif;font-size:11px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;font-style:italic;margin-top:2px}
 .section-hd-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(74,93,74,0.2),transparent)}
 
 /* ══ PRODUCT GRID ══ */
 .product-grid{display:flex;flex-direction:column;gap:13px}
+.empty-grid-note{font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;color:var(--muted);opacity:.6;padding:4px 2px}
 
 /* ══ PRODUCT CARD ══ */
 .product-card{
@@ -227,13 +137,11 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
 @keyframes cardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 .product-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(74,93,74,0.15)}
 
-/* Card image */
 .card-img-wrap{width:100%;height:180px;overflow:hidden;position:relative;background:var(--bg2)}
 .card-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease;display:block}
 .product-card:hover .card-img-wrap img{transform:scale(1.05)}
 .card-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:52px;background:linear-gradient(135deg,var(--bg2) 0%,var(--bg) 100%)}
 
-/* Card body */
 .card-body{padding:14px 16px 16px}
 .card-name{font-family:'Noto Naskh Arabic',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:3px}
 .card-name-en{font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px;display:block}
@@ -251,9 +159,7 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
 
 /* ══ RATING SECTION ══ */
 .rating-section{margin:36px 18px 0}
-
 .rating-intro{text-align:center;font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;opacity:.7}
-
 .quick-stars-card{
   background:var(--white);border-radius:20px;padding:24px 20px;
   box-shadow:0 2px 12px rgba(74,93,74,0.1);border:1px solid rgba(255,255,255,0.7);
@@ -262,12 +168,12 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
 .quick-stars-title{font-size:18px;font-weight:700;color:var(--forest-dark);margin-bottom:4px}
 .quick-stars-sub{font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px}
 .quick-stars{display:inline-flex;gap:6px;direction:ltr;margin-bottom:10px}
-.qstar{background:none;border:none;font-size:38px;color:#d9c5a8;cursor:pointer;padding:3px;transition:color 0.15s ease,transform 0.2s cubic-bezier(0.34,1.56,0.64,1);-webkit-tap-highlight-color:transparent}
-.qstar.lit{color:#e9a825}
+/* 🔧 FIXED: darker, higher-contrast unlit star color so stars are clearly visible */
+.qstar{background:none;border:none;font-size:38px;color:#c9b28f;cursor:pointer;padding:3px;transition:color 0.15s ease,transform 0.2s cubic-bezier(0.34,1.56,0.64,1);-webkit-tap-highlight-color:transparent;text-shadow:0 1px 2px rgba(0,0,0,0.08)}
+.qstar.lit{color:#e9a825;text-shadow:0 1px 3px rgba(233,168,37,0.35)}
 .qstar:hover{transform:scale(1.2)}
 .quick-label{font-size:15px;font-weight:600;color:var(--muted);min-height:22px;transition:all 0.3s}
 
-/* Positive card */
 .pos-card{
   background:var(--white);border-radius:20px;padding:24px 20px;
   box-shadow:0 2px 12px rgba(74,93,74,0.1);border:1.5px solid rgba(74,93,74,0.2);
@@ -285,7 +191,6 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
 }
 .maps-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(26,115,232,0.4)}
 
-/* Negative card */
 .neg-card{
   background:var(--white);border-radius:20px;padding:20px;
   box-shadow:0 2px 12px rgba(74,93,74,0.1);border:1.5px solid rgba(192,57,43,0.18);
@@ -295,7 +200,6 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
 .neg-title{font-size:16px;font-weight:700;color:var(--red);margin-bottom:4px}
 .neg-sub{font-size:13px;color:var(--muted);margin-bottom:14px}
 
-/* Complaint form */
 .complaint-form{display:none;margin-top:12px;animation:cardIn 0.4s ease}
 .complaint-input{
   width:100%;padding:12px 14px;border:1.5px solid var(--bg2);border-radius:12px;
@@ -311,13 +215,11 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
 }
 .complaint-submit:hover{transform:translateY(-1px)}
 
-/* Success */
 .rating-success{display:none;text-align:center;padding:20px;animation:cardIn 0.5s ease}
 .rating-success-icon{font-size:40px;margin-bottom:8px}
 .rating-success-title{font-size:18px;font-weight:700;color:var(--forest-dark)}
 .rating-success-sub{font-size:13px;color:var(--muted);margin-top:4px;font-family:'Cormorant Garamond',serif;font-style:italic}
 
-/* Branch badge */
 .branch-tag{
   display:inline-flex;align-items:center;gap:6px;margin:14px auto 0;
   background:rgba(74,93,74,0.08);border:1px solid rgba(74,93,74,0.15);
@@ -354,7 +256,6 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
 .admin-pass-btn:hover{background:var(--forest-dark)}
 .admin-pass-error{display:none;font-size:12px;color:var(--red);text-align:center;margin-top:8px}
 
-/* Admin panel */
 .admin-panel{
   display:none;margin:14px 18px 0;background:var(--white);border-radius:18px;
   border:1.5px solid rgba(74,93,74,0.2);overflow:hidden;box-shadow:0 4px 20px rgba(74,93,74,0.1);
@@ -396,7 +297,6 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
 }
 .admin-btn-del.active{background:linear-gradient(135deg,#27ae60 0%,#1e8449 100%)}
 
-/* Image upload */
 .img-upload-zone{
   border:2px dashed var(--bg2);border-radius:12px;padding:16px;text-align:center;
   cursor:pointer;transition:var(--t);position:relative;min-height:80px;
@@ -410,7 +310,6 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
 .img-placeholder-text{font-size:13px;font-weight:600;color:var(--forest-dark)}
 .img-placeholder-hint{font-size:10px;color:var(--muted);letter-spacing:1px;font-family:'Cormorant Garamond',serif;text-transform:uppercase}
 
-/* Delete badge on card */
 .del-badge{
   display:none;position:absolute;top:8px;right:8px;
   width:28px;height:28px;background:var(--red);color:#fff;border:none;
@@ -421,7 +320,6 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
 .del-badge:hover{background:#922b21;transform:scale(1.1)}
 .product-card.del-mode .del-badge{display:flex}
 
-/* Edit img button */
 .card-img-edit{
   display:none;position:absolute;bottom:8px;right:8px;
   width:28px;height:28px;background:rgba(74,93,74,0.85);color:#fff;border:none;
@@ -432,7 +330,6 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
 .card-img-edit:hover{background:var(--forest-dark);transform:scale(1.1)}
 .product-card.img-mode .card-img-edit{display:flex}
 
-/* Branch url input */
 .branch-url-note{font-family:'Cormorant Garamond',serif;font-size:11px;font-style:italic;color:var(--muted);opacity:.6;margin-top:5px}
 
 /* ══ QR MODAL ══ */
@@ -540,7 +437,6 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
 /* ══ FOOTER ══ */
 .site-footer{text-align:center;padding:28px 20px;font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;color:var(--muted);opacity:.5;letter-spacing:1px}
 
-/* Complaint card in admin */
 .complaint-card{background:var(--bg);border-radius:12px;border:1px solid rgba(192,57,43,0.15);border-right:3px solid var(--red);padding:12px 14px}
 .complaint-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:4px}
 .complaint-stars{font-size:13px;color:#e9a825;direction:ltr}
@@ -601,30 +497,8 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
 
 <!-- MAIN -->
 <div class="page-wrap">
-  <main class="main-content">
-
-    <div class="section-hd">
-      <span class="section-hd-icon">☕</span>
-      <div class="section-hd-info">
-        <h2 class="section-hd-title">مشروبات نمق</h2>
-        <div class="section-hd-sub">Signature Drinks</div>
-      </div>
-      <div class="section-hd-line"></div>
-    </div>
-    <div class="product-grid" id="drinks-grid"></div>
-
-    <div class="ornament">✦ ✦ ✦</div>
-
-    <div class="section-hd" style="margin-top:30px">
-      <span class="section-hd-icon">🍰</span>
-      <div class="section-hd-info">
-        <h2 class="section-hd-title">حلا نمق المميز</h2>
-        <div class="section-hd-sub">Premium Desserts</div>
-      </div>
-      <div class="section-hd-line"></div>
-    </div>
-    <div class="product-grid" id="sweets-grid"></div>
-
+  <main class="main-content" id="menu-sections">
+    <!-- Category sections injected by JS -->
   </main>
 
   <!-- RATING -->
@@ -643,7 +517,6 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
       <div class="quick-label" id="quick-label">اختر تقييمك</div>
     </div>
 
-    <!-- Positive -->
     <div class="pos-card" id="step-pos">
       <div class="pos-icon">🌟</div>
       <div class="pos-title">يسعدنا أنك راضٍ!</div>
@@ -651,14 +524,12 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
       <a id="maps-link" href="#" target="_blank" rel="noopener" class="maps-btn">✍️ اكتب تقييمك على Google Maps</a>
     </div>
 
-    <!-- Negative -->
     <div class="neg-card" id="step-neg">
       <div class="neg-icon">💬</div>
       <div class="neg-title">نأسف لذلك — رأيك يهمنا</div>
       <div class="neg-sub">أخبرنا بما حدث وسنتواصل معك للتحسين</div>
     </div>
 
-    <!-- Complaint form -->
     <div class="complaint-form" id="complaint-form">
       <div style="background:var(--white);border-radius:18px;padding:20px;box-shadow:0 2px 10px rgba(74,93,74,0.1);border:1px solid rgba(192,57,43,0.15)">
         <div style="font-size:14px;font-weight:700;color:var(--forest-dark);margin-bottom:12px">📝 شاركنا تفاصيل تجربتك</div>
@@ -668,7 +539,6 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
       </div>
     </div>
 
-    <!-- Success -->
     <div class="rating-success" id="rating-success">
       <div class="rating-success-icon">🎉</div>
       <div class="rating-success-title">شكراً على تقييمك!</div>
@@ -684,20 +554,20 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
   <div class="admin-gate">
     <button class="admin-gate-btn" onclick="toggleAdminGate()">⚙️ لوحة تحكم المدير</button>
     <div class="admin-pass-box" id="admin-pass-box">
+      <input type="email" class="admin-pass-input" id="admin-email-input" placeholder="البريد الإلكتروني" style="width:100%;margin-bottom:8px;letter-spacing:normal" autocomplete="username">
       <div class="admin-pass-row">
-        <input type="password" class="admin-pass-input" id="admin-pass-input" placeholder="كلمة المرور" onkeydown="if(event.key==='Enter')checkAdminPass()">
+        <input type="password" class="admin-pass-input" id="admin-pass-input" placeholder="كلمة المرور" autocomplete="current-password" onkeydown="if(event.key==='Enter')checkAdminPass()">
         <button class="admin-pass-btn" onclick="checkAdminPass()">دخول</button>
       </div>
-      <div class="admin-pass-error" id="admin-pass-error">⚠️ كلمة المرور غير صحيحة</div>
+      <div class="admin-pass-error" id="admin-pass-error">⚠️ بيانات الدخول غير صحيحة</div>
     </div>
   </div>
 
   <!-- ADMIN PANEL -->
   <div class="admin-panel" id="admin-panel">
 
-    <!-- Branch settings -->
     <div class="admin-section">
-      <div class="admin-section-title">📍 إعدادات الفرع <span class="admin-badge">⭐ مدير</span></div>
+      <div class="admin-section-title">📍 إعدادات الفرع <span class="admin-badge" id="admin-role-badge">⭐ مدير</span></div>
       <div style="font-size:13px;font-weight:700;color:var(--forest-dark);margin-bottom:6px" id="admin-branch-name"></div>
       <div style="font-size:11px;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);margin-bottom:10px" id="admin-branch-code"></div>
       <div class="admin-row" style="margin-bottom:0">
@@ -715,6 +585,16 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
       </div>
     </div>
 
+    <!-- ADD CATEGORY -->
+    <div class="admin-section">
+      <div class="admin-section-title">📂 إضافة مجموعة جديدة</div>
+      <div class="admin-row">
+        <input type="text" class="admin-input" id="new-cat-name" placeholder="اسم المجموعة (مثال: مشروبات ساخنة)" style="flex:2">
+        <input type="text" class="admin-input" id="new-cat-emoji" placeholder="إيموجي" style="flex:1" maxlength="4">
+      </div>
+      <button class="admin-btn-add" onclick="addCategory()">إضافة المجموعة ✓</button>
+    </div>
+
     <!-- Add product -->
     <div class="admin-section">
       <div class="admin-section-title">➕ إضافة منتج جديد</div>
@@ -724,10 +604,7 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
       </div>
       <div class="admin-row">
         <input type="number" class="admin-input" id="new-cal" placeholder="السعرات (اختياري)">
-        <select class="admin-select" id="new-cat">
-          <option value="drinks">مشروبات ☕</option>
-          <option value="sweets">حلويات 🍰</option>
-        </select>
+        <select class="admin-select" id="new-cat"></select>
       </div>
       <input type="text" class="admin-input" id="new-desc" placeholder="وصف المنتج (اختياري)" style="width:100%;margin-bottom:9px">
       <input type="text" class="admin-input" id="new-allergens" placeholder="مسببات الحساسية مفصولة بفاصلة (اختياري)" style="width:100%;margin-bottom:9px">
@@ -744,20 +621,17 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
       <button class="admin-btn-add" onclick="addProduct()">إضافة المنتج ✓</button>
     </div>
 
-    <!-- Delete mode -->
     <div class="admin-section">
       <div class="admin-section-title">🗑️ حذف منتج</div>
       <button class="admin-btn-del" id="del-toggle-btn" onclick="toggleDelMode()">تفعيل وضع الحذف</button>
     </div>
 
-    <!-- Edit images -->
     <div class="admin-section">
       <div class="admin-section-title">🖼️ تعديل صور المنتجات</div>
       <button class="admin-btn-del" id="img-toggle-btn" onclick="toggleImgMode()" style="background:linear-gradient(135deg,var(--forest) 0%,var(--forest-dark) 100%)">تفعيل وضع تعديل الصور</button>
       <input type="file" id="card-img-input" accept="image/*" style="display:none" onchange="applyCardImg(event)">
     </div>
 
-    <!-- Logo upload -->
     <div class="admin-section">
       <div class="admin-section-title">🐢 تغيير الشعار</div>
       <div class="img-upload-zone">
@@ -769,13 +643,11 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
       </div>
     </div>
 
-    <!-- Complaints viewer -->
     <div class="admin-section">
       <div class="admin-section-title">📬 الشكاوى والتقييمات <span class="admin-badge" id="complaints-count">0</span></div>
       <div id="complaints-list" style="display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto"></div>
     </div>
 
-    <!-- Logout -->
     <div class="admin-section" style="text-align:center">
       <button onclick="adminLogout()" style="background:transparent;border:1.5px solid var(--bg2);border-radius:10px;padding:9px 20px;font-family:'Noto Naskh Arabic',serif;font-size:13px;color:var(--muted);cursor:pointer;transition:var(--t)">تسجيل خروج 🔓</button>
     </div>
@@ -837,9 +709,20 @@ body{font-family:'Noto Naskh Arabic',serif;background:#f5f0e8;color:#1a1714;min-
 
 <script>
 /* ══════════════════════════════════════
-   CONFIG — 🔧 عدّل هنا لكل فرع
+   CONFIG
 ══════════════════════════════════════ */
-const ADMIN_PASSWORD = 'Namaq2026';
+/* ══ FIREBASE ══ */
+const firebaseConfig = {
+  apiKey: "AIzaSyClW2jkvRKmVRfJY02nKCE3iHAs89BjwcM",
+  authDomain: "namaq-menu.firebaseapp.com",
+  projectId: "namaq-menu",
+  storageBucket: "namaq-menu.firebasestorage.app",
+  messagingSenderId: "98198330180",
+  appId: "1:98198330180:web:1ad07cc5786322046e1511"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
 
 const BRANCH_MAPPING = {
   'N02':{ name:'فرع الملقا',         city:'الرياض',          region:'منطقة الرياض',     reviewUrl:'', pagerUrl:'https://bajri.app' },
@@ -875,6 +758,12 @@ const BRANCH_MAPPING = {
   'N32':{ name:'فرع العليا',        city:'الرياض',          region:'منطقة الرياض',     reviewUrl:'', pagerUrl:'https://bajri.app' },
 };
 
+/* ══ CATEGORIES (dynamic — extendable via admin panel) ══ */
+let CATEGORIES = {
+  drinks: { name:'مشروبات نمق', nameEn:'Signature Drinks', icon:'☕', label:'☕ مشروبات' },
+  sweets: { name:'حلا نمق المميز', nameEn:'Premium Desserts', icon:'🍰', label:'🍰 حلويات' }
+};
+
 const INITIAL_PRODUCTS = {
   drinks:[
     { id:'d1', name:'V60',                 nameEn:'Pour Over',         price:18, calories:5,   category:'drinks', emoji:'☕', desc:'قهوة مصفاة يدوياً بأسلوب V60 الياباني، تبرز نكهات الفاكهة والزهور في كل كوب.', allergens:[], options:[{label:'نوع القهوة',items:['إثيوبي','كولومبي','برازيلي']}] },
@@ -891,11 +780,13 @@ const INITIAL_PRODUCTS = {
 };
 
 const ALLERGEN_ICONS = {'جلوتين':'🌾','منتجات ألبان':'🥛','بيض':'🥚','مكسرات':'🥜','سمسم':'🌿','صويا':'🫘'};
-const CAT_LABELS     = { drinks:'☕ مشروبات', sweets:'🍰 حلويات' };
 const STAR_LABELS    = ['','تجربة سيئة 😞','دون المستوى 😕','مقبولة 😐','جيدة جداً 😊','ممتازة! 🤩'];
 
 /* ══ STATE ══ */
 let activeBranchKey, activeBranch, delMode=false, imgMode=false, targetCardId=null, uploadedImg=null, qrCode=null;
+let products = { drinks:[...INITIAL_PRODUCTS.drinks], sweets:[...INITIAL_PRODUCTS.sweets] };
+let idCtr=100;
+let currentUserRole=null, currentUserBranchKey=null;
 
 /* ══ BRANCH ══ */
 function initBranch(){
@@ -903,15 +794,8 @@ function initBranch(){
   const code  = decodeURIComponent(raw).toUpperCase().trim();
   activeBranchKey = BRANCH_MAPPING[code] ? code : Object.keys(BRANCH_MAPPING)[0];
 
-  // Load saved data
-  const saved = JSON.parse(localStorage.getItem('namaq_branches')||'{}');
-  Object.entries(BRANCH_MAPPING).forEach(([k,v])=>{
-    if(saved[k]){ Object.assign(v, saved[k]); }
-  });
-
   activeBranch = BRANCH_MAPPING[activeBranchKey];
 
-  // Populate select
   const sel = document.getElementById('branch-select');
   sel.innerHTML='';
   Object.entries(BRANCH_MAPPING).forEach(([k,b])=>{
@@ -922,6 +806,18 @@ function initBranch(){
   });
 
   updateBranchUI();
+}
+
+async function loadBranchFromFirestore(){
+  try{
+    const doc = await db.collection('branch_settings').doc(activeBranchKey).get();
+    if(doc.exists){
+      const d = doc.data();
+      if(d.reviewUrl) activeBranch.reviewUrl = d.reviewUrl;
+      if(d.pagerUrl) activeBranch.pagerUrl = d.pagerUrl;
+      updateBranchUI();
+    }
+  }catch(err){ console.error('branch load error', err); }
 }
 
 function updateBranchUI(){
@@ -941,9 +837,64 @@ function switchBranch(){
   window.location.href=`${base}?branch=${code}`;
 }
 
-/* ══ PRODUCTS ══ */
-let products = { drinks:[...INITIAL_PRODUCTS.drinks], sweets:[...INITIAL_PRODUCTS.sweets] };
-let idCtr=100;
+/* ══ CATEGORY DROPDOWN SYNC ══ */
+function updateCategoryDropdown(){
+  const select = document.getElementById('new-cat');
+  const current = select.value;
+  select.innerHTML = Object.entries(CATEGORIES)
+    .map(([id,cat])=>`<option value="${id}">${cat.label||(cat.icon+' '+cat.name)}</option>`)
+    .join('');
+  if(CATEGORIES[current]) select.value = current;
+}
+
+/* ══ RENDER ALL MENU SECTIONS ══ */
+function renderAllSections(){
+  const container = document.getElementById('menu-sections');
+  container.innerHTML='';
+
+  const catIds = Object.keys(CATEGORIES);
+  catIds.forEach((catId,idx)=>{
+    const cat = CATEGORIES[catId];
+
+    if(idx>0){
+      const orn=document.createElement('div');
+      orn.className='ornament'; orn.textContent='✦ ✦ ✦';
+      container.appendChild(orn);
+    }
+
+    const hd=document.createElement('div');
+    hd.className='section-hd'+(idx===0?' first':'');
+    hd.innerHTML=`
+      <span class="section-hd-icon">${cat.icon||'🍽️'}</span>
+      <div class="section-hd-info">
+        <h2 class="section-hd-title">${cat.name}</h2>
+        <div class="section-hd-sub">${cat.nameEn||''}</div>
+      </div>
+      <div class="section-hd-line"></div>`;
+    container.appendChild(hd);
+
+    const grid=document.createElement('div');
+    grid.className='product-grid';
+    grid.id=`${catId}-grid`;
+    container.appendChild(grid);
+
+    const items = products[catId]||[];
+    if(!items.length){
+      const note=document.createElement('p');
+      note.className='empty-grid-note';
+      note.textContent='لا توجد منتجات في هذه المجموعة بعد';
+      grid.appendChild(note);
+    } else {
+      items.forEach((p,i)=>{
+        const card=createCard(p);
+        card.style.animationDelay=`${i*0.07}s`;
+        grid.appendChild(card);
+      });
+    }
+  });
+
+  updateCategoryDropdown();
+}
 
 function createCard(p){
   const card = document.createElement('div');
@@ -954,7 +905,7 @@ function createCard(p){
 
   const imgContent = p.imageUrl
     ? `<img src="${p.imageUrl}" alt="${p.name}" loading="lazy">`
-    : `<div class="card-img-placeholder">${p.emoji||'☕'}</div>`;
+    : `<div class="card-img-placeholder">${p.emoji||CATEGORIES[p.category]?.icon||'☕'}</div>`;
 
   card.innerHTML=`
     <button class="del-badge" onclick="deleteCard('${p.id}')">×</button>
@@ -981,19 +932,60 @@ function createCard(p){
   return card;
 }
 
-function renderProducts(){
-  ['drinks','sweets'].forEach(cat=>{
-    const grid = document.getElementById(`${cat}-grid`);
-    grid.innerHTML='';
-    products[cat].forEach((p,i)=>{
-      const card=createCard(p);
-      card.style.animationDelay=`${i*0.07}s`;
-      grid.appendChild(card);
+/* ══ LOAD SAVED DATA FROM FIRESTORE ══ */
+async function loadMenuFromFirestore(){
+  try{
+    const catSnap = await db.collection('categories').get();
+    catSnap.forEach(doc=>{
+      const d = doc.data();
+      CATEGORIES[doc.id] = { name:d.name, nameEn:d.nameEn||'', icon:d.icon||'🍽️', label:`${d.icon||'🍽️'} ${d.name}` };
+      if(!products[doc.id]) products[doc.id]=[];
     });
-  });
+
+    const prodSnap = await db.collection('products').get();
+    prodSnap.forEach(doc=>{
+      const d = doc.data();
+      if(!products[d.categoryId]) products[d.categoryId]=[];
+      products[d.categoryId].push({
+        id: doc.id, name:d.name, nameEn:d.nameEn||'', price:d.price,
+        calories:d.calories||0, category:d.categoryId, desc:d.desc||'',
+        allergens:d.allergens||[], options:d.options||[],
+        imageUrl:d.imageUrl||null, emoji:d.emoji||'🍽️', fromFirestore:true
+      });
+    });
+
+    renderAllSections();
+  }catch(err){
+    console.error('Firestore menu load error', err);
+    showToast('⚠️ تعذر تحميل بعض البيانات المحفوظة');
+  }
 }
 
-/* ══ ADD PRODUCT ══ */
+/* ══ ADD CATEGORY (persisted) ══ */
+async function addCategory(){
+  const nameInput = document.getElementById('new-cat-name');
+  const emojiInput = document.getElementById('new-cat-emoji');
+  const name = nameInput.value.trim();
+  let emoji = emojiInput.value.trim();
+  if(!name){ showToast('⚠️ يرجى إدخال اسم المجموعة'); return; }
+  if(!emoji) emoji='🍽️';
+
+  try{
+    const docRef = await db.collection('categories').add({
+      name, nameEn:'', icon:emoji, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    CATEGORIES[docRef.id] = { name, nameEn:'', icon:emoji, label:`${emoji} ${name}` };
+    products[docRef.id]=[];
+    renderAllSections();
+    nameInput.value=''; emojiInput.value='';
+    showToast(`✅ تم إضافة مجموعة "${name}" وحفظها بشكل دائم`);
+  }catch(err){
+    console.error(err);
+    showToast('⚠️ تعذر الحفظ — تحقق من الاتصال');
+  }
+}
+
+/* ══ ADD PRODUCT (persisted) ══ */
 function handleNewImg(e){
   const file=e.target.files[0];
   if(!file) return;
@@ -1007,13 +999,6 @@ function handleNewImg(e){
   r.readAsDataURL(file);
 }
 
-/* ══ PARSE MULTI-LINE OPTION GROUPS ══
-   Input format (each line = one group):
-     نوع القهوة: إثيوبي، كولومبي، برازيلي
-     الإضافات: موهيتو، مشروب طاقة
-   Output: [{label:'نوع القهوة', items:['إثيوبي','كولومبي','برازيلي']}, ...]
-   Lines without ':' become an "عام" (general) group of comma-separated items.
-══════════════════════════════════════ */
 function parseOptionGroups(text){
   if(!text) return [];
   const lines = text.split('\n').map(l=>l.trim()).filter(Boolean);
@@ -1021,21 +1006,18 @@ function parseOptionGroups(text){
   lines.forEach(line=>{
     let label='عام', rest=line;
     const sepIdx = line.indexOf(':')>=0 ? line.indexOf(':') : line.indexOf('：');
-    if(sepIdx>0){
-      label = line.slice(0,sepIdx).trim();
-      rest  = line.slice(sepIdx+1).trim();
-    }
+    if(sepIdx>0){ label = line.slice(0,sepIdx).trim(); rest = line.slice(sepIdx+1).trim(); }
     const items = rest.split(/[,،]/).map(s=>s.trim()).filter(Boolean);
     if(items.length) groups.push({ label, items });
   });
   return groups;
 }
 
-function addProduct(){
+async function addProduct(){
   const name   = document.getElementById('new-name').value.trim();
   const price  = parseInt(document.getElementById('new-price').value);
   const cal    = parseInt(document.getElementById('new-cal').value)||0;
-  const cat    = document.getElementById('new-cat').value;
+  const catId  = document.getElementById('new-cat').value;
   const desc   = document.getElementById('new-desc').value.trim();
   const allStr = document.getElementById('new-allergens').value.trim();
   const allergens = allStr ? allStr.split(',').map(s=>s.trim()).filter(Boolean) : [];
@@ -1044,30 +1026,55 @@ function addProduct(){
 
   if(!name){ showToast('⚠️ أدخل اسم المنتج'); return; }
   if(!price||price<=0){ showToast('⚠️ أدخل سعراً صحيحاً'); return; }
+  if(!catId||!CATEGORIES[catId]){ showToast('⚠️ اختر مجموعة'); return; }
 
-  const p={
-    id:`custom-${++idCtr}`, name, price, calories:cal, category:cat,
-    desc, allergens, options, imageUrl:uploadedImg||null,
-    emoji: cat==='drinks'?'☕':'🍰'
-  };
+  const emoji = CATEGORIES[catId].icon || '🍽️';
 
-  products[cat].push(p);
-  renderProducts();
+  try{
+    const docRef = await db.collection('products').add({
+      categoryId: catId, name, price, calories:cal, desc, allergens, options,
+      imageUrl: uploadedImg||null, emoji,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
 
-  // Reset
-  ['new-name','new-price','new-cal','new-desc','new-allergens','new-options'].forEach(id=>document.getElementById(id).value='');
-  uploadedImg=null;
-  document.getElementById('new-img-preview').style.display='none';
-  document.getElementById('new-img-placeholder').style.display='flex';
+    if(!products[catId]) products[catId]=[];
+    products[catId].push({
+      id: docRef.id, name, price, calories:cal, category:catId, desc, allergens, options,
+      imageUrl: uploadedImg||null, emoji, fromFirestore:true
+    });
 
-  showToast(`✅ تم إضافة "${name}"`);
+    renderAllSections();
+
+    ['new-name','new-price','new-cal','new-desc','new-allergens','new-options'].forEach(id=>document.getElementById(id).value='');
+    uploadedImg=null;
+    document.getElementById('new-img-preview').style.display='none';
+    document.getElementById('new-img-placeholder').style.display='flex';
+    document.getElementById('new-cat').value = catId;
+
+    showToast(`✅ تم إضافة "${name}" وحفظه بشكل دائم`);
+  }catch(err){
+    console.error(err);
+    showToast('⚠️ تعذر الحفظ — تحقق من الاتصال');
+  }
 }
 
-/* ══ DELETE ══ */
-function deleteCard(id){
-  ['drinks','sweets'].forEach(cat=>{ products[cat]=products[cat].filter(p=>p.id!==id); });
+/* ══ DELETE (also removes from Firestore if saved there) ══ */
+async function deleteCard(id){
+  let isFromFirestore=false;
+  for(const catId in products){
+    const found = products[catId].find(p=>p.id===id);
+    if(found){ isFromFirestore = !!found.fromFirestore; break; }
+  }
+
+  for(const catId in products){ products[catId]=products[catId].filter(p=>p.id!==id); }
   const el=document.querySelector(`[data-id="${id}"]`);
   if(el){ el.style.transition='all 0.3s ease'; el.style.opacity='0'; el.style.transform='scale(0.85)'; setTimeout(()=>el.remove(),300); }
+
+  if(isFromFirestore){
+    try{ await db.collection('products').doc(id).delete(); }
+    catch(err){ console.error(err); }
+  }
+
   showToast('🗑️ تم حذف المنتج');
 }
 
@@ -1094,10 +1101,10 @@ function triggerImgEdit(id,e){
   targetCardId=id;
   document.getElementById('card-img-input').click();
 }
-function applyCardImg(e){
+async function applyCardImg(e){
   const file=e.target.files[0]; if(!file||!targetCardId) return;
   const r=new FileReader();
-  r.onload=ev=>{
+  r.onload=async ev=>{
     const card=document.querySelector(`[data-id="${targetCardId}"]`);
     if(!card) return;
     const wrap=card.querySelector('.card-img-wrap');
@@ -1108,6 +1115,20 @@ function applyCardImg(e){
       const img=document.createElement('img'); img.src=ev.target.result;
       img.alt='منتج'; img.loading='lazy'; oldPh.replaceWith(img);
     }
+
+    // persist if this product came from Firestore
+    for(const catId in products){
+      const p = products[catId].find(x=>x.id===targetCardId);
+      if(p){
+        p.imageUrl = ev.target.result;
+        if(p.fromFirestore){
+          try{ await db.collection('products').doc(targetCardId).update({ imageUrl: ev.target.result }); }
+          catch(err){ console.error(err); }
+        }
+        break;
+      }
+    }
+
     showToast('✅ تم تحديث الصورة');
     document.getElementById('card-img-input').value='';
     targetCardId=null;
@@ -1139,128 +1160,215 @@ function handleStar(val){
   setTimeout(()=>{
     document.getElementById('step-quick').style.display='none';
     if(val>=4){
-      // Positive: redirect to Maps
       const mapsUrl=activeBranch.reviewUrl||'https://maps.google.com';
       document.getElementById('maps-link').href=mapsUrl;
       document.getElementById('step-pos').style.display='block';
       setTimeout(()=>{ if(mapsUrl!=='#') window.open(mapsUrl,'_blank'); },1500);
     } else {
-      // Negative: internal complaint
       document.getElementById('step-neg').style.display='block';
       document.getElementById('complaint-form').style.display='block';
     }
   },400);
 }
 
-function submitComplaint(){
+async function submitComplaint(){
   const invoice=document.getElementById('c-invoice').value.trim();
   const comment=document.getElementById('c-comment').value.trim();
   if(!comment){ showToast('⚠️ يرجى كتابة ملاحظتك'); return; }
 
-  // Save locally
-  const reviews=JSON.parse(localStorage.getItem(`namaq_reviews_${activeBranchKey}`)||'[]');
   const now=new Date();
-  reviews.push({
-    id:Date.now(), invoice, comment, quickStar,
+  const entry = {
+    invoice, comment, quickStar,
     branch:activeBranch.name, branchKey:activeBranchKey,
     isComplaint:true,
     dateStr:now.toLocaleDateString('ar-SA',{weekday:'long',year:'numeric',month:'long',day:'numeric'}),
     timeStr:now.toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'}),
-    timestamp:now.toISOString()
-  });
-  localStorage.setItem(`namaq_reviews_${activeBranchKey}`,JSON.stringify(reviews));
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  try{
+    await db.collection('reviews').add(entry);
+  }catch(err){
+    console.error('review save error', err);
+  }
 
   ['step-neg','complaint-form'].forEach(id=>document.getElementById(id).style.display='none');
   document.getElementById('rating-success').style.display='block';
   showToast('✅ شكراً — تم إرسال ملاحظتك للإدارة');
 }
 
-/* ══ ADMIN ══ */
+/* ══ ADMIN (real Firebase Authentication) ══ */
 let adminUnlocked=false;
+
 function toggleAdminGate(){
   const box=document.getElementById('admin-pass-box');
   if(adminUnlocked){ document.getElementById('admin-panel').classList.toggle('open'); return; }
   box.classList.toggle('open');
-  if(box.classList.contains('open')) setTimeout(()=>document.getElementById('admin-pass-input').focus(),100);
+  if(box.classList.contains('open')) setTimeout(()=>document.getElementById('admin-email-input').focus(),100);
 }
-function checkAdminPass(){
-  const val=document.getElementById('admin-pass-input').value;
+
+async function checkAdminPass(){
+  const email=document.getElementById('admin-email-input').value.trim();
+  const pass=document.getElementById('admin-pass-input').value;
   const err=document.getElementById('admin-pass-error');
-  if(val===ADMIN_PASSWORD){
+
+  if(!email || !pass){
+    err.textContent='⚠️ أدخل البريد وكلمة المرور';
+    err.style.display='block';
+    return;
+  }
+
+  try{
+    const cred = await auth.signInWithEmailAndPassword(email, pass);
+    const userDoc = await db.collection('users').doc(cred.user.uid).get();
+
+    if(!userDoc.exists){
+      err.textContent='⚠️ هذا الحساب غير مسجل في النظام';
+      err.style.display='block';
+      await auth.signOut();
+      return;
+    }
+
+    const d = userDoc.data();
+    currentUserRole = d.role || 'manager';
+    currentUserBranchKey = d.branchKey || null;
+
     adminUnlocked=true;
     document.getElementById('admin-pass-box').classList.remove('open');
+    document.getElementById('admin-email-input').value='';
     document.getElementById('admin-pass-input').value='';
     err.style.display='none';
     openAdminPanel();
-  } else {
+  }catch(e){
+    console.error(e);
+    err.textContent='⚠️ بيانات الدخول غير صحيحة';
     err.style.display='block';
     document.getElementById('admin-pass-input').value='';
   }
 }
+
+function isSuperAdmin(){ return currentUserRole==='super_admin'; }
+
+/* The branch a manager is allowed to edit — super_admin can edit whichever branch is currently being viewed */
+function editableBranchKey(){
+  return isSuperAdmin() ? activeBranchKey : currentUserBranchKey;
+}
 function openAdminPanel(){
   const panel=document.getElementById('admin-panel');
   panel.classList.add('open');
-  document.getElementById('admin-branch-name').textContent=activeBranch.name;
-  document.getElementById('admin-branch-code').textContent=`?branch=${activeBranchKey}`;
-  document.getElementById('branch-url-input').value=activeBranch.reviewUrl||'';
-  document.getElementById('pager-url-input').value=activeBranch.pagerUrl||'https://bajri.app';
+
+  const badge = document.getElementById('admin-role-badge');
+  const editKey = editableBranchKey();
+  const editBranch = BRANCH_MAPPING[editKey];
+
+  if(isSuperAdmin()){
+    badge.textContent='⭐ مدير عام';
+  } else if(editBranch){
+    badge.textContent=`مدير فرع: ${editBranch.name}`;
+  } else {
+    badge.textContent='⚠️ لا يوجد فرع مرتبط بحسابك';
+  }
+
+  if(editBranch){
+    document.getElementById('admin-branch-name').textContent=editBranch.name;
+    document.getElementById('admin-branch-code').textContent=`?branch=${editKey}`;
+    document.getElementById('branch-url-input').value=editBranch.reviewUrl||'';
+    document.getElementById('pager-url-input').value=editBranch.pagerUrl||'https://bajri.app';
+  }
+
   renderComplaints();
   panel.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-function renderComplaints(){
-  const reviews=JSON.parse(localStorage.getItem(`namaq_reviews_${activeBranchKey}`)||'[]');
-  document.getElementById('complaints-count').textContent=reviews.length;
+/* ══ COMPLAINTS (loaded from Firestore) ══ */
+let currentComplaints = [];
+
+async function renderComplaints(){
   const list=document.getElementById('complaints-list');
-  if(!reviews.length){
+  const key = editableBranchKey();
+  if(!key){
+    list.innerHTML='<div class="complaints-empty">⚠️ لا يوجد فرع مرتبط بحسابك</div>';
+    document.getElementById('complaints-count').textContent='0';
+    return;
+  }
+  list.innerHTML='<div class="complaints-empty">⏳ جاري التحميل...</div>';
+  try{
+    const snap = await db.collection('reviews').where('branchKey','==',key).get();
+    currentComplaints = [];
+    snap.forEach(doc=> currentComplaints.push({ firestoreId: doc.id, ...doc.data() }));
+    currentComplaints.sort((a,b)=>{
+      const ta=a.createdAt?.seconds||0, tb=b.createdAt?.seconds||0;
+      return tb-ta;
+    });
+  }catch(err){
+    console.error('complaints load error', err);
+    currentComplaints=[];
+  }
+
+  document.getElementById('complaints-count').textContent=currentComplaints.length;
+  if(!currentComplaints.length){
     list.innerHTML='<div class="complaints-empty">📭 لا توجد شكاوى لهذا الفرع</div>';
     return;
   }
-  const sorted=[...reviews].reverse();
-  list.innerHTML=sorted.map(r=>{
+  list.innerHTML=currentComplaints.map(r=>{
     const stars='★'.repeat(r.quickStar||0)+'☆'.repeat(5-(r.quickStar||0));
     return `
       <div class="complaint-card">
         <div class="complaint-card-head">
           <div class="complaint-stars">${stars}</div>
-          <button class="complaint-del" onclick="deleteComplaint(${r.id})">🗑</button>
+          <button class="complaint-del" onclick="deleteComplaint('${r.firestoreId}')">🗑</button>
         </div>
         ${r.invoice?`<div class="complaint-meta">فاتورة #${r.invoice}</div>`:''}
         <div class="complaint-text">${r.comment}</div>
-        <div class="complaint-meta" style="margin-top:4px">${r.dateStr} · ${r.timeStr}</div>
+        <div class="complaint-meta" style="margin-top:4px">${r.dateStr||''} · ${r.timeStr||''}</div>
       </div>`;
   }).join('');
 }
 
-function deleteComplaint(id){
-  let reviews=JSON.parse(localStorage.getItem(`namaq_reviews_${activeBranchKey}`)||'[]');
-  reviews=reviews.filter(r=>r.id!==id);
-  localStorage.setItem(`namaq_reviews_${activeBranchKey}`,JSON.stringify(reviews));
+async function deleteComplaint(firestoreId){
+  try{ await db.collection('reviews').doc(firestoreId).delete(); }
+  catch(err){ console.error(err); showToast('⚠️ ليس لديك صلاحية لحذف هذا العنصر'); return; }
   renderComplaints();
   showToast('تم حذف الشكوى');
 }
+
 function adminLogout(){
   adminUnlocked=false;
+  currentUserRole=null;
+  currentUserBranchKey=null;
+  auth.signOut();
   document.getElementById('admin-panel').classList.remove('open');
   showToast('تم تسجيل الخروج');
 }
-function saveBranchUrl(){
+
+async function saveBranchUrl(){
+  const key = editableBranchKey();
+  if(!key){ showToast('⚠️ لا يوجد فرع مرتبط بحسابك'); return; }
   const url=document.getElementById('branch-url-input').value.trim();
   if(url&&!url.startsWith('http')){ showToast('⚠️ رابط غير صحيح'); return; }
-  activeBranch.reviewUrl=url;
-  saveLocalBranch(); updateBranchUI();
+  BRANCH_MAPPING[key].reviewUrl=url;
+  await saveBranchToFirestore(key);
+  if(key===activeBranchKey) updateBranchUI();
   showToast('✅ تم حفظ رابط Maps');
 }
-function savePagerUrl(){
+async function savePagerUrl(){
+  const key = editableBranchKey();
+  if(!key){ showToast('⚠️ لا يوجد فرع مرتبط بحسابك'); return; }
   const url=document.getElementById('pager-url-input').value.trim()||'https://bajri.app';
-  activeBranch.pagerUrl=url;
-  saveLocalBranch(); updateBranchUI();
+  BRANCH_MAPPING[key].pagerUrl=url;
+  await saveBranchToFirestore(key);
+  if(key===activeBranchKey) updateBranchUI();
   showToast('✅ تم حفظ رابط البيجر');
 }
-function saveLocalBranch(){
-  const saved=JSON.parse(localStorage.getItem('namaq_branches')||'{}');
-  saved[activeBranchKey]={ reviewUrl:activeBranch.reviewUrl, pagerUrl:activeBranch.pagerUrl };
-  localStorage.setItem('namaq_branches',JSON.stringify(saved));
+async function saveBranchToFirestore(key){
+  try{
+    await db.collection('branch_settings').doc(key).set({
+      reviewUrl: BRANCH_MAPPING[key].reviewUrl||'', pagerUrl: BRANCH_MAPPING[key].pagerUrl||''
+    }, { merge:true });
+  }catch(err){
+    console.error('branch save error', err);
+    showToast('⚠️ ليس لديك صلاحية لتعديل هذا الفرع');
+  }
 }
 
 /* ══ QR ══ */
@@ -1321,7 +1429,7 @@ function openDetail(id){
   wrap.innerHTML=img&&img.src
     ?`<img src="${img.src}" class="detail-hero" alt="${p.name}">`
     :`<div class="detail-hero-placeholder">${p.emoji||'☕'}</div>`;
-  document.getElementById('d-cat').textContent=CAT_LABELS[p.category]||'🍽️ منتج';
+  document.getElementById('d-cat').textContent=(CATEGORIES[p.category]&&CATEGORIES[p.category].label)||'🍽️ منتج';
   document.getElementById('d-name').textContent=p.name||'';
   document.getElementById('d-name-en').textContent=p.nameEn||'';
   document.getElementById('d-price').textContent=p.price||'';
@@ -1364,10 +1472,11 @@ function showToast(msg){
 }
 
 /* ══ INIT ══ */
-document.addEventListener('DOMContentLoaded',()=>{
+document.addEventListener('DOMContentLoaded', async ()=>{
   initBranch();
-  renderProducts();
-  // Restore logo
+  renderAllSections();
+  await loadBranchFromFirestore();
+  await loadMenuFromFirestore();
   try{
     const savedLogo=localStorage.getItem('namaq_logo');
     if(savedLogo){ const img=document.querySelector('.logo-inner img'); if(img){ img.src=savedLogo; img.style.display='block'; const fb=document.querySelector('.logo-fallback'); if(fb) fb.style.display='none'; } }
